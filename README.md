@@ -9,4 +9,4 @@ Take a deep breath!
 
 ## Guidelines for teammates
 
-- To work on a specific feature, create a branch named [yourName/feature]
+- To work on a specific feature, create a branch named [yourName-feature]
