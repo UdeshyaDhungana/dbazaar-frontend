@@ -18,7 +18,7 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { useMediaQuery } from '@chakra-ui/react';
 
-import Button from './commons/atomic/button'
+import Button from '../commons/atomic/button'
 import SearchBar from './searchBar';
 
 // const Links = ['Dashboard', 'Projects', 'Team'];
