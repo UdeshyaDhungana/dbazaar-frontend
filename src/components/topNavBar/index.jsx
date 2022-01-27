@@ -14,7 +14,11 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  Heading,
 } from '@chakra-ui/react';
+
+import '@fontsource/red-hat-display/700.css'
+
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { useMediaQuery } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
