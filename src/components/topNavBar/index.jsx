@@ -60,7 +60,7 @@ export default function TopNavBar() {
           />
           <HStack spacing={8} alignItems={'center'}>
             <Link to="/">
-            <Box>DecentBazaar</Box>
+              <Box><Heading color='brand.100'>DecentBazaar</Heading></Box>
             </Link>
             {/* <HStack
               as={'nav'}
@@ -73,13 +73,13 @@ export default function TopNavBar() {
             <SearchBar hideOnMobile />
           </HStack>
           <Flex alignItems={'center'}>
-            <Box display={isMobile? 'none': 'inherit'} className='flex'>
-            <Button className={'mx-2'}>
-              Sign In
-            </Button>
-            <Button shadow className={'mx-4'}>
-              My Cart
-            </Button>
+            <Box display={isMobile ? 'none' : 'inherit'} className='flex'>
+              <Button className={'mx-2'}>
+                Sign In
+              </Button>
+              <Button shadow className={'mx-4'}>
+                My Cart
+              </Button>
             </Box>
             <Menu>
               <MenuButton
