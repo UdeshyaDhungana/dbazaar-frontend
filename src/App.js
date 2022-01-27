@@ -14,11 +14,13 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <TopNavBar />
+        <div className="md:px-4 px-2">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes>
+        </div>
         <BottomNavBar />
       </BrowserRouter>
     </div>
