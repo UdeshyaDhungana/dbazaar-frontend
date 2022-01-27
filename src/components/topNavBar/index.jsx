@@ -21,6 +21,7 @@ import '@fontsource/red-hat-display/700.css'
 
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { useMediaQuery } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 
 import Button from '../commons/atomic/button'
 import SearchBar from './searchBar';
@@ -58,7 +59,9 @@ export default function TopNavBar() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Box><Heading color='brand.100'>DecentBazaar</Heading></Box>
+            <Link to="/">
+            <Box>DecentBazaar</Box>
+            </Link>
             {/* <HStack
               as={'nav'}
               spacing={4}
