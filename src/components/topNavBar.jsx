@@ -3,9 +3,9 @@ import {
   Flex,
   Avatar,
   HStack,
-  Link,
+  // Link,
   IconButton,
-  Button,
+  Button as ChakraButton,
   Menu,
   MenuButton,
   MenuList,
@@ -16,29 +16,35 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { useMediaQuery } from '@chakra-ui/react';
 
-const Links = ['Dashboard', 'Projects', 'Team'];
+import Button from './commons/atomic/button'
+import SearchBar from './searchBar';
 
-const NavLink = ({ children }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={'md'}
-    _hover={{
-      textDecoration: 'none',
-      bg: useColorModeValue('gray.200', 'gray.700'),
-    }}
-    href={'#'}>
-    {children}
-  </Link>
-);
+// const Links = ['Dashboard', 'Projects', 'Team'];
+
+// const NavLink = ({ children }) => (
+//   <Link
+//     px={2}
+//     py={1}
+//     rounded={'md'}
+//     _hover={{
+//       textDecoration: 'none',
+//       bg: useColorModeValue('gray.200', 'gray.700'),
+//     }}
+//     href={'#'}>
+//     {children}
+//   </Link>
+// );
 
 export default function TopNavBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
+
 
   return (
     <>
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+      <Box className='border-b' bg={useColorModeValue('white', 'gray.900')} px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -48,20 +54,29 @@ export default function TopNavBar() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Box>Logo</Box>
-            <HStack
+            <Box>DecentBazaar</Box>
+            {/* <HStack
               as={'nav'}
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
               {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
-            </HStack>
+            </HStack> */}
+            <SearchBar hideOnMobile />
           </HStack>
           <Flex alignItems={'center'}>
+            <Box display={isMobile? 'none': 'inherit'} className='flex'>
+            <Button className={'mx-2'}>
+              Sign In
+            </Button>
+            <Button shadow className={'mx-4'}>
+              My Cart
+            </Button>
+            </Box>
             <Menu>
               <MenuButton
-                as={Button}
+                as={ChakraButton}
                 rounded={'full'}
                 variant={'link'}
                 cursor={'pointer'}
@@ -74,10 +89,9 @@ export default function TopNavBar() {
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>Link 1</MenuItem>
-                <MenuItem>Link 2</MenuItem>
+                <MenuItem>Profile</MenuItem>
                 <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
+                <MenuItem>Logout</MenuItem>
               </MenuList>
             </Menu>
           </Flex>
@@ -85,10 +99,14 @@ export default function TopNavBar() {
 
         {isOpen ? (
           <Box pb={4} display={{ md: 'none' }}>
+            <SearchBar className={'mb-4'} />
             <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
+              <Button>
+                Sign In
+              </Button>
+              <Button shadow>
+                My Cart
+              </Button>
             </Stack>
           </Box>
         ) : null}
