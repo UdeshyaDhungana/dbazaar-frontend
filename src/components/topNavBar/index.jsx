@@ -14,7 +14,11 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  Heading,
 } from '@chakra-ui/react';
+
+import '@fontsource/red-hat-display/700.css'
+
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { useMediaQuery } from '@chakra-ui/react';
 
@@ -54,7 +58,7 @@ export default function TopNavBar() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Box>DecentBazaar</Box>
+            <Box><Heading color='brand.100'>DecentBazaar</Heading></Box>
             {/* <HStack
               as={'nav'}
               spacing={4}
