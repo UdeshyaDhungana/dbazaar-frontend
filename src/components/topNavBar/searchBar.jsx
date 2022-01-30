@@ -1,7 +1,7 @@
-import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
-import { Input, InputGroup, InputLeftElement, InputRightAddon } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { useMediaQuery } from '@chakra-ui/react';
+import { Input, Icon, InputGroup, InputLeftElement, InputRightAddon, useMediaQuery } from '@chakra-ui/react';
+import { AiOutlineSearch } from 'react-icons/ai'
+import { IoCloseSharp } from 'react-icons/io5'
 
 function SearchBar({ className, hideOnMobile }) {
     const [searchKeyWord, setSearchKeyWord] = useState('');
@@ -30,7 +30,7 @@ function SearchBar({ className, hideOnMobile }) {
                 className={'rounded-lg ' + className}>
                 <InputLeftElement
                     pointerEvents='none'
-                    children={<SearchIcon color='gray.300' />}
+                    children={<Icon as={AiOutlineSearch} color={"gray.900"} />}
                 />
                 <Input
                     value={searchKeyWord}
@@ -39,7 +39,7 @@ function SearchBar({ className, hideOnMobile }) {
                     onKeyPress={handleKeyPress}
                     placeholder='Search Products' />
                 <InputRightAddon onClick={clearInput} className='cursor-pointer'>
-                    <CloseIcon color='gray.300' />
+                    <Icon as={IoCloseSharp} color={"gray.900"} />
                 </InputRightAddon>
             </InputGroup>
         </>

@@ -1,6 +1,10 @@
 import React from 'react';
 
-function NavBar() {
+// const categories = [
+//     {}
+// ]
+
+function Categories() {
     return ( 
         <div>
             This should be navbar
@@ -8,4 +12,4 @@ function NavBar() {
      );
 }
 
-export default NavBar;
+export default Categories;
