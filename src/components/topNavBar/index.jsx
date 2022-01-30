@@ -16,10 +16,8 @@ import {
   Stack,
   Heading,
 } from '@chakra-ui/react';
-import { IoCloseSharp } from 'react-icons/io5'
-import { GiHamburgerMenu } from 'react-icons/gi'
 
-import '@fontsource/red-hat-display/700.css'
+import { X, List } from 'phosphor-react';
 
 import { useMediaQuery } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
@@ -54,7 +52,7 @@ export default function TopNavBar() {
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
-            icon={isOpen ? <Icon as={IoCloseSharp} /> : <Icon as={GiHamburgerMenu} />}
+            icon={isOpen ? <Icon as={X} /> : <Icon as={List} />}
             aria-label={'Open Menu'}
             display={{ md: 'none' }}
             onClick={isOpen ? onClose : onOpen}
