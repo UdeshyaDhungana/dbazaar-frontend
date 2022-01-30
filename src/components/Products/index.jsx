@@ -6,56 +6,56 @@ import ProductsListing from './productsListing';
 const productsList = [
     {
         id: 1,
-        name: "Old Typewriter",
+        label: "Old Typewriter",
         price: 2000.00,
         description: "Very good! Been in my family since my grandfather's time.",
         stars: 4.5,
     },
     {
         id: 2,
-        name: "Goldstar shoes",
+        label: "Goldstar shoes",
         price: 3000.00,
         description: "OG gangsta shoes from Nepal.",
         stars: 4.0,
     },
     {
         id: 3,
-        name: "Kitten",
+        label: "Kitten",
         price: 2000.00,
         description: "Let's not talk about this",
         stars: 3.0,
     },
     {
         id: 4,
-        name: "Plant pot",
+        label: "Plant pot",
         price: 200.00,
         description: "Used to get high with this",
         stars: 5.0,
     },
     {
         id: 5,
-        name: "Lotion",
+        label: "Lotion",
         price: 500.00,
         description: "( ͡° ͜ʖ ͡°)",
         stars: 5.0,
     },
     {
         id: 6,
-        name: "Bonsai Tree",
+        label: "Bonsai Tree",
         price: 20000.00,
         description: "Brought it from Japan. Stupid. No mangoes even in summer.",
         stars: 2.0,
     },
     {
         id: 7,
-        name: "Makeup Brush",
+        label: "Makeup Brush",
         price: 800.00,
         description: "Got me 10 dates. None of them lasted. :(",
         stars: 4.2,
     },
     {
         id: 8,
-        name: "Pencils",
+        label: "Pencils",
         price: 120,
         description: "5 marks for extra good handwriting",
         stars: 4.5,
@@ -67,9 +67,7 @@ function Products() {
 
     useEffect(() => {
         // to be replaced with api later
-        setTimeout(() => {
-            setProducts(productsList);
-        }, 2000);
+        setProducts(productsList);
     }, [])
 
     return ( 
