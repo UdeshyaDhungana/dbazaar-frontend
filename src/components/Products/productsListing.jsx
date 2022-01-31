@@ -29,7 +29,7 @@ const ProductCard = ({ product: { id, label, price, description, stars } }) => {
                             as={Star}
                             key={i}
                             weight={i < stars ? 'fill': 'regular'}
-                            color={'gray.300'}
+                            color={'orange.300'}
                         />
                     ))}
             </Box>
@@ -41,16 +41,12 @@ const ProductCard = ({ product: { id, label, price, description, stars } }) => {
 function ProductsListing({ products }) {
     return (
         <Flex
-            direction="column"
-            justifyContent="center"
-            maxW={{ xl: "1200px" }}
-            m="0 auto"
+            direction="row"
             minH="100vh"
-            marginY={"3"}
         >
             <Grid
                 w="full"
-                gridGap="5"
+                gridGap="10"
                 gridTemplateColumns="repeat( auto-fit, minmax(300px, 1fr) )"
             >
                 {products.map((product) => (

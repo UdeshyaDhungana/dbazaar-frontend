@@ -14,7 +14,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <TopNavBar />
-        <div className="md:px-12 px-3">
+        <div className="md:px-12 px-4">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about-us" element={<AboutUs />} />

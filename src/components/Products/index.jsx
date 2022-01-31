@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Categories from './categories';
-// import Filters from './filters';
+import Filters from './filters';
 import ProductsListing from './productsListing';
 
 const productsList = [
@@ -70,17 +69,15 @@ function Products() {
         setProducts(productsList);
     }, [])
 
-    return ( 
-        <div>
-            <Categories />
-            <div>
-                {/* <Filters /> */}
-                <ProductsListing
-                    products={products}
-                />
-            </div>
+    return (
+        <div className='my-10'> 
+            <Filters />
+            <ProductsListing
+                products={products}
+            />
         </div>
-     );
+        // </div>
+    );
 }
 
 export default Products;
