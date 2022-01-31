@@ -1,25 +1,11 @@
 import {
-    Icon,
-    IconButton,
-    useDisclosure,
-    Box,
-    Stack,
-    useMediaQuery,
-    FormControl,
-    FormLabel,
-    Select,
-    NumberInput,
+    Box, Collapse, FormControl,
+    FormLabel, Icon, NumberDecrementStepper, NumberIncrementStepper, NumberInput,
     NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
-    NumberDecrementStepper,
-    // RangeSlider,
-    // RangeSliderTrack,
-    // RangeSliderFilledTrack,
-    // RangeSliderThumb,
+    NumberInputStepper, Select, Stack, useDisclosure
 } from '@chakra-ui/react';
+import { FadersHorizontal, X } from 'phosphor-react';
 import React, { useState } from 'react';
-import { List, X } from 'phosphor-react'
 import Button from '../commons/atomic/button';
 
 const categories = [
@@ -30,35 +16,53 @@ const categories = [
 ]
 
 const stars = [
-    { id: 0, label: '1 & Up'},
-    { id: 1, label: '2 & Up'},
-    { id: 2, label: '3 & Up'},
-    { id: 3, label: '4 & Up'},
+    { id: 0, label: '1 & Up' },
+    { id: 1, label: '2 & Up' },
+    { id: 2, label: '3 & Up' },
+    { id: 3, label: '4 & Up' },
 ]
 
 function FiltersForm() {
-    const [category, setCategory] = useState("");
-    // const [stars, setStars] = useState(0);
+    const [category, setCategory] = useState(0);
+    const [star, setStar] = useState(0);
     const [minPrice, setMinPrice] = useState(0);
-    const [maxPrice, setMaxPrice] = useState(Infinity);
+    const [maxPrice, setMaxPrice] = useState(0);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // submit now
+        console.log(category, star, minPrice, maxPrice);
+    }
 
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <FormControl className='my-4'>
                 <FormLabel htmlFor='category'>Category</FormLabel>
-                <Select width={'container.sm'} defaultValue={''} placeholder='All'>
+                <Select
+                    name='category'
+                    w={{ md: "96", sm: "100" }}
+                    value={category}
+                    onChange={({target: {value}}) => {
+                        setCategory(value);
+                    }}
+                >
                     {categories.map(({ id, label }) => (
                         <option key={id} value={id}>{label}</option>
                     ))}
                 </Select>
             </FormControl>
-            <div className="flex gap-4">
-                <FormControl >
+            <div className='w-full md:w-1/2 flex gap-4'>
+                <FormControl _invalid={{ borderColor: 'crimson' }} >
                     <FormLabel htmlFor='min-price'>Min. Price</FormLabel>
                     <NumberInput
                         clampValueOnBlur
                         min={0}
-                        defaultValue={0}
+                        name='min-price'
+                        value={minPrice}
+                        onChange={value => {
+                            if (value >= 0)
+                                setMinPrice(value);
+                        }}
                     >
                         <NumberInputField />
                         <NumberInputStepper>
@@ -67,12 +71,17 @@ function FiltersForm() {
                         </NumberInputStepper>
                     </NumberInput>
                 </FormControl>
-                <FormControl >
-                    <FormLabel htmlFor='min-price'>Max. Price</FormLabel>
+                <FormControl>
+                    <FormLabel htmlFor='max-price'>Max. Price</FormLabel>
                     <NumberInput
                         clampValueOnBlur
-                        min={minPrice}
-                        defaultValue={Infinity}
+                        min={0}
+                        name='max-price'
+                        value={maxPrice}
+                        onChange={value => {
+                            if (value >= 0)
+                                setMaxPrice(value);
+                        }}
                     >
                         <NumberInputField />
                         <NumberInputStepper>
@@ -84,42 +93,46 @@ function FiltersForm() {
             </div>
             <FormControl className='my-4'>
                 <FormLabel htmlFor='stars'>Stars</FormLabel>
-                <Select width={'container.sm'} defaultValue={''} placeholder='Stars'>
+                <Select
+                    w={{ md: "96", sm: "100" }}
+                    name='stars'
+                    value={star}
+                    onChange={({ target: { value } }) => {
+                        setStar(value);
+                    }}
+                >
                     {stars.map(({ id, label }) => (
                         <option key={id} value={id}>{label}</option>
                     ))}
                 </Select>
             </FormControl>
-            <Button>
+            <Button
+                type={"submit"}
+                disabled={!(minPrice || maxPrice) ? false : (minPrice > maxPrice) ? true : false}>
                 Go
             </Button>
-        </form>
+        </form >
     );
 }
 
-function Filters({ hideOnMobile }) {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const [isLargeScreen] = useMediaQuery("(min-width: 1024px)");
+function Filters() {
+    const { isOpen, onToggle } = useDisclosure();
 
     return (
         <div className='my-8'>
-            <IconButton
+            <Button
                 size={'md'}
-                icon={isOpen ? <Icon as={X} /> : <Icon as={List} />}
-                aria-label={'Open Menu'}
-                display={isLargeScreen ? "none" : "inherit"}
-                onClick={isOpen ? onClose : onOpen}
-            />
-            {isOpen && (
-                <Box pb={4} display={isLargeScreen ? "none" : "inherit"}>
+                leftIcon={isOpen ? <Icon as={X} /> : <Icon as={FadersHorizontal} />}
+                onClick={onToggle}>
+                Filters
+            </Button>
+            <Collapse in={isOpen} animateOpacity>
+                <Box pb={4}>
                     <Stack spacing={4}>
                         <FiltersForm />
                     </Stack>
                 </Box>
-            )}
-            <Box display={isLargeScreen ? "inherit" : "none"}>
-                <FiltersForm />
-            </Box>
+            </Collapse>
         </div>
     );
 }
