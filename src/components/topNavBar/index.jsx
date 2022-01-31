@@ -5,6 +5,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  Image,
   Button as ChakraButton,
   Menu,
   MenuButton,
@@ -15,8 +16,11 @@ import {
   useColorModeValue,
   Stack,
   Heading,
+  Text,
+  theme,
 } from '@chakra-ui/react';
 
+import logo from '../../logo.png';
 import { X, List } from 'phosphor-react';
 
 import { useMediaQuery } from '@chakra-ui/react';
@@ -58,8 +62,15 @@ export default function TopNavBar() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
+            <Image
+              boxSize='40px'
+              objectFit='cover'
+              src={logo}
+              alt='DLogo'
+            />
+
             <Link to="/">
-              <Box><Heading color='brand.100'>DecentBazaar</Heading></Box>
+              <Box><Heading color='brandBlue.100'>DecentBazaar</Heading></Box>
             </Link>
             {/* <HStack
               as={'nav'}
@@ -73,11 +84,19 @@ export default function TopNavBar() {
           </HStack>
           <Flex alignItems={'center'}>
             <Box display={isMobile ? 'none' : 'inherit'} className='flex'>
-              <Button className={'mx-2'}>
-                Sign In
+              <Button className={'mx-4'}
+                color='brandBlue.600'
+                border='1px solid'
+                borderColor='brandBlue.500'
+                borderRadius='lg'>
+                <Text fontFamily='Inter'>Sign In</Text>
               </Button>
-              <Button shadow className={'mx-4'}>
-                My Cart
+              <Button className={'mx-4'}
+                color='brandBlue.600'
+                border='1px solid'
+                borderColor='brandBlue.500'
+                borderRadius='lg'>
+                <Text fontFamily='Inter'>My Cart</Text>
               </Button>
             </Box>
             <Menu>

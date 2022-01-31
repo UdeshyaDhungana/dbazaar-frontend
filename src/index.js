@@ -7,15 +7,20 @@ import '@fontsource/red-hat-display/700.css'
 
 // 2. Extend the theme to include custom colors, fonts, etc
 const colors = {
-  brand: {
+  brandBlue: {
     900: '#1a365d',
     800: '#153e75',
     700: '#2a69ac',
+    500: '#9DC2FF',
+    600: '#2264D1',
     100: '#0C2146',
-  },
-  fonts: {
-    heading: 'Red Hat Display',
-  },
+  }, 
+  brandGray: {
+    100: '#5A5B6A',
+    200: '#EDEDF0',
+    300 : '#19191D',
+    
+  }
 }
 
 const theme = extendTheme({ colors });
