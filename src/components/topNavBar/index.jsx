@@ -24,6 +24,8 @@ import { Link } from 'react-router-dom';
 
 import Button from '../commons/atomic/button'
 import SearchBar from './searchBar';
+import Register from './register';
+import Login from './login'
 
 // const Links = ['Dashboard', 'Projects', 'Team'];
 
@@ -42,20 +44,19 @@ import SearchBar from './searchBar';
 // );
 
 export default function TopNavBar() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isHamMenuOpen, onHamMenuOpen, onHamMenuClose } = useDisclosure();
+
   const [isMobile] = useMediaQuery("(max-width: 768px)");
-
-
   return (
     <>
       <Box className='border-b' bg={useColorModeValue('white', 'gray.900')} px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
-            icon={isOpen ? <Icon as={X} /> : <Icon as={List} />}
+            icon={isHamMenuOpen ? <Icon as={X} /> : <Icon as={List} />}
             aria-label={'Open Menu'}
             display={{ md: 'none' }}
-            onClick={isOpen ? onClose : onOpen}
+            onClick={isHamMenuOpen ? onHamMenuClose : onHamMenuOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
             <Link to="/">
@@ -73,12 +74,8 @@ export default function TopNavBar() {
           </HStack>
           <Flex alignItems={'center'}>
             <Box display={isMobile ? 'none' : 'inherit'} className='flex'>
-              <Button className={'mx-2'}>
-                Sign In
-              </Button>
-              <Button shadow className={'mx-4'}>
-                My Cart
-              </Button>
+              <Login />
+              <Register />
             </Box>
             <Menu>
               <MenuButton
@@ -103,7 +100,7 @@ export default function TopNavBar() {
           </Flex>
         </Flex>
 
-        {isOpen ? (
+        {isHamMenuOpen ? (
           <Box pb={4} display={{ md: 'none' }}>
             <SearchBar className={'mb-4'} />
             <Stack as={'nav'} spacing={4}>

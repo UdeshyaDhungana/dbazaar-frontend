@@ -5,7 +5,6 @@ import {
     Flex,
     Grid,
     Stack, 
-    Text, 
     Heading, 
     Icon,
     Modal,
