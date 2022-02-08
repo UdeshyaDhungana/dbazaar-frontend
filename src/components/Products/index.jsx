@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Filters from './filters';
 import ProductsListing from './productsListing';
 
-const productsList = [
+export const productsList = [
     {
         id: 1,
         label: "Old Typewriter",
