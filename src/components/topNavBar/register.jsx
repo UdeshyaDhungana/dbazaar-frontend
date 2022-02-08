@@ -69,7 +69,7 @@ function Register({ label, title, onSubmit, children }) {
             <Button shadow onClick={onOpen} className={"mx-4"}>
                 Register
             </Button>
-            <Modal size={'xl'} isOpen={isOpen} onClose={onClose}>
+            <Modal size={"3xl"} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <form onSubmit={handleSubmit}>

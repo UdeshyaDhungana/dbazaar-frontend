@@ -24,7 +24,7 @@ function Login() {
             <Button shadow onClick={onOpen} className={"mx-4"}>
                 Login
             </Button>
-            <Modal size={'xl'} isOpen={isOpen} onClose={onClose}>
+            <Modal size={"xl"} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <form onSubmit={handleSubmit}>
