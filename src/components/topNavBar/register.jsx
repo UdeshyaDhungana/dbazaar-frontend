@@ -18,6 +18,40 @@ function Register({ label, title, onSubmit, children }) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
+    // Keep track of errors
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordConfirmError, setPasswordConfirmError] = useState('');
+
+    const generateErrors = () => {
+        let errorPresent = false;
+        if (password.length < 8 || !isNaN(password)){
+            setPasswordError('Please choose password according to instructions');
+            errorPresent = true;
+        }
+        else
+            setPasswordError('');
+        if (passwordConfirm !== password) {
+            setPasswordConfirmError('Please match passwords');
+            errorPresent = true;
+        }
+        else
+            setPasswordConfirmError('');
+        return errorPresent;
+    }
+
+    const clearForm = () => {
+        setUsername('');
+        setPassword('');
+        setPasswordConfirm('');
+        setEmail('');
+        setFirstName('');
+        setLastName('');
+        // clear errors
+        setPasswordError('');
+        setPasswordConfirmError('');
+    }
+
+
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(firstName)
@@ -26,6 +60,8 @@ function Register({ label, title, onSubmit, children }) {
         console.log(email)
         console.log(password)
         console.log(passwordConfirm)
+        // Generate errors
+        console.log(generateErrors())
     }
 
     return (
@@ -33,7 +69,7 @@ function Register({ label, title, onSubmit, children }) {
             <Button shadow onClick={onOpen} className={"mx-4"}>
                 Register
             </Button>
-            <Modal size={'xl'} isOpen={isOpen} onClose={onClose}>
+            <Modal size={"3xl"} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <form onSubmit={handleSubmit}>
@@ -52,6 +88,7 @@ function Register({ label, title, onSubmit, children }) {
                                 <FormControl isRequired>
                                     <FormLabel htmlFor='last-name'>Last Name</FormLabel>
                                     <Input
+
                                         value={lastName}
                                         onChange={({ target: { value } }) => { setLastName(value) }}
                                         id='last-name' />
@@ -78,10 +115,15 @@ function Register({ label, title, onSubmit, children }) {
                             <FormControl className='mb-4' isRequired>
                                 <FormLabel htmlFor='password'>Password</FormLabel>
                                 <Input
+                                    isInvalid={passwordError}
                                     type={"password"}
                                     value={password}
                                     onChange={({ target: { value } }) => { setPassword(value) }}
                                     id='password' />
+                                {passwordError &&
+                                    <FormHelperText color={"crimson"}>
+                                        Please enter password according to the instructions below
+                                    </FormHelperText>}
                                 <FormHelperText>
                                     <ul>
                                         <li>Can't be too similar to your personal information</li>
@@ -95,16 +137,21 @@ function Register({ label, title, onSubmit, children }) {
                             <FormControl isRequired>
                                 <FormLabel htmlFor='password-confirm'>Confirm Password</FormLabel>
                                 <Input
+                                    isInvalid={passwordConfirmError}
                                     type={"password"}
                                     value={passwordConfirm}
                                     onChange={({ target: { value } }) => { setPasswordConfirm(value) }}
                                     id='password-confirm' />
+                                {passwordConfirmError &&
+                                    <FormHelperText color={"crimson"}>
+                                        Passwords do not match
+                                    </FormHelperText>}
                             </FormControl>
                         </ModalBody>
                         <ModalFooter>
                             <Button type="submit" mr={3} filled>Register</Button>
-                            <ChakraButton onClick={onClose}>
-                                Close
+                            <ChakraButton onClick={clearForm}>
+                                Clear
                             </ChakraButton>
                         </ModalFooter>
                     </form>
