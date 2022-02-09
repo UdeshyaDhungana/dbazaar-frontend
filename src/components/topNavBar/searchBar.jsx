@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Icon, InputGroup, InputLeftElement, InputRightAddon, useMediaQuery, Box } from '@chakra-ui/react';
+import { Input, Icon, InputGroup, InputLeftElement, InputRightAddon, useMediaQuery } from '@chakra-ui/react';
 import { MagnifyingGlass, X } from 'phosphor-react';
 
 function SearchBar({ className, hideOnMobile }) {
@@ -26,9 +26,8 @@ function SearchBar({ className, hideOnMobile }) {
             <InputGroup
                 bg={'brandGray.200'}
                 display={hideOnMobile && isMobile ? 'none' : 'inherit'}
-                className={'rounded-lg ' + className} 
+                className={'rounded-lg ' + className}
                 fontFamily='Inter'>
-                
                 <InputLeftElement
                     pointerEvents='none'
                     children={<Icon as={MagnifyingGlass} color={"brandGray.100"} />}

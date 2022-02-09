@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import '@fontsource/red-hat-display/700.css'
 
 // 2. Extend the theme to include custom colors, fonts, etc
 const colors = {
@@ -19,7 +18,6 @@ const colors = {
     100: '#5A5B6A',
     200: '#EDEDF0',
     300 : '#19191D',
-    
   }
 }
 
