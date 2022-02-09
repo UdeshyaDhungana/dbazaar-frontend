@@ -24,21 +24,23 @@ function SearchBar({ className, hideOnMobile }) {
     return (
         <>
             <InputGroup
-                bg={'gray.100'}
+                bg={'brandGray.200'}
                 display={hideOnMobile && isMobile ? 'none' : 'inherit'}
-                className={'rounded-lg ' + className}>
+                className={'rounded-lg ' + className}
+                fontFamily='Inter'>
                 <InputLeftElement
                     pointerEvents='none'
-                    children={<Icon as={MagnifyingGlass} color={"gray.900"} />}
+                    children={<Icon as={MagnifyingGlass} color={"brandGray.100"} />}
                 />
                 <Input
                     value={searchKeyWord}
                     onChange={handleChange}
                     type='text'
+                    bf='brandGray.200'
                     onKeyPress={handleKeyPress}
                     placeholder='Search Products' />
-                <InputRightAddon onClick={clearInput} className='cursor-pointer'>
-                    <Icon as={X} color={"gray.900"} />
+                <InputRightAddon bg={'brandGray.200'} onClick={clearInput} className='cursor-pointer'>
+                    <Icon as={X} color={"brandGray.100"} />
                 </InputRightAddon>
             </InputGroup>
         </>

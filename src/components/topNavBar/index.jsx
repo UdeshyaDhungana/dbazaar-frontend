@@ -5,6 +5,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  Image,
   Button as ChakraButton,
   Menu,
   MenuButton,
@@ -15,8 +16,10 @@ import {
   useColorModeValue,
   Stack,
   Heading,
+  Text,
 } from '@chakra-ui/react';
 
+import logo from '../../logo.png';
 import { X, List } from 'phosphor-react';
 
 import { useMediaQuery } from '@chakra-ui/react';
@@ -49,7 +52,7 @@ export default function TopNavBar() {
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   return (
     <>
-      <Box className='border-b' bg={useColorModeValue('white', 'gray.900')} px={4}>
+      <Box className='border-b' bg={useColorModeValue('white', 'brandGray.100')} px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -59,8 +62,14 @@ export default function TopNavBar() {
             onClick={isHamMenuOpen ? onHamMenuClose : onHamMenuOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
+            <Image
+              boxSize='40px'
+              objectFit='cover'
+              src={logo}
+              alt='DLogo'
+            />
             <Link to="/">
-              <Box><Heading color='brand.100'>DecentBazaar</Heading></Box>
+              <Box><Heading color='brandBlue.100'>DecentBazaar</Heading></Box>
             </Link>
             {/* <HStack
               as={'nav'}
@@ -104,11 +113,19 @@ export default function TopNavBar() {
           <Box pb={4} display={{ md: 'none' }}>
             <SearchBar className={'mb-4'} />
             <Stack as={'nav'} spacing={4}>
-              <Button>
-                Sign In
+              <Button className={'mx-4'}
+                color='brandBlue.600'
+                border='1px solid'
+                borderColor='brandBlue.500'
+                borderRadius='lg'>
+                <Text fontFamily='Inter'>Sign In</Text>
               </Button>
-              <Button shadow>
-                My Cart
+              <Button className={'mx-4'}
+                color='brandBlue.600'
+                border='1px solid'
+                borderColor='brandBlue.500'
+                borderRadius='lg'>
+                <Text fontFamily='Inter'>My Cart</Text>
               </Button>
             </Stack>
           </Box>

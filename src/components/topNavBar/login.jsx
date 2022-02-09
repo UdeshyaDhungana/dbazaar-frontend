@@ -2,7 +2,7 @@ import {
     Button as ChakraButton,
     FormControl, FormLabel, Input,
     Modal, ModalBody,
-    ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure
+    ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Text
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import Button from '../commons/atomic/button';
@@ -21,8 +21,14 @@ function Login() {
 
     return (
         <>
-            <Button shadow onClick={onOpen} className={"mx-4"}>
-                Login
+
+            <Button color='brandBlue.600'
+                border='1px solid'
+                borderColor='brandBlue.500'
+                borderRadius='lg'
+                onClick={onOpen}
+                className={"mx-4"}>
+                <Text fontFamily='Inter'>Login</Text>
             </Button>
             <Modal size={"xl"} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />

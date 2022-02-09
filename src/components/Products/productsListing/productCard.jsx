@@ -18,7 +18,7 @@ const ProductCard = ({ product: { id, label, price, stars } }) => {
                 }}
                 borderRadius={"xl"}
                 cursor={"pointer"}
-                p={{ base: "5px 2rem" }}>
+                p={{ base: "5px 2rem" }} fontFamily='Inter'>
                 <Image
                     width={"fit-content"}
                     alignSelf={"center"}
@@ -27,11 +27,12 @@ const ProductCard = ({ product: { id, label, price, stars } }) => {
                     // objectFit="cover"
                     src={'https://picsum.photos/seed/picsum/200/300'}
                     alt={label} />
-                <Heading color="gray.600" size="md" textTransform="capitalize">
+
+                <Heading fontFamily='Inter' color="brandGray.300" size="md" textTransform="capitalize">
                     {label}
                 </Heading>
                 <Box>
-                    <Box as="span" color="gray.600" fontSize="sm">
+                    <Box as="span"color="brandGray.100" fontSize="sm" fontFamily='Inter'>
                         Rs.&nbsp;
                     </Box>
                     {price}
