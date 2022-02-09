@@ -4,25 +4,23 @@ import {
     Image,
     Heading,
     Box,
-    Icon,
 } from '@chakra-ui/react'
 
-import { Star } from 'phosphor-react'
 import { Link } from 'react-router-dom';
+import ReviewStars from '../../commons/reviewStars';
 
-const ProductCard = ({ product: { id, label, price, description, stars }, detailed }) => {
+const ProductCard = ({ product: { id, label, price, stars } }) => {
     return (
         <Link to={`/products/${id}`}>
             <Stack
-                _hover={!detailed ? {
+                _hover={{
                     boxShadow: "2xl"
-                } : null}
+                }}
                 borderRadius={"xl"}
                 cursor={"pointer"}
                 p={{ base: "5px 2rem" }}>
                 <Image
-                    height={detailed?"sm":"inherit"}
-                    width={detailed?"container.sm":"fit-content"}
+                    width={"fit-content"}
                     alignSelf={"center"}
                     border={"1px"}
                     borderRadius={'xl'}
@@ -38,22 +36,7 @@ const ProductCard = ({ product: { id, label, price, description, stars }, detail
                     </Box>
                     {price}
                 </Box>
-                <Box display='flex' mt='2' alignItems='center'>
-                    {Array(5)
-                        .fill('')
-                        .map((_, i) => (
-                            <Icon
-                                as={Star}
-                                key={i}
-                                weight={i < stars ? 'fill' : 'regular'}
-                                color={'orange.300'}
-                            />
-                        ))}
-                </Box>
-                {detailed && <Box>
-                    {description}
-                </Box>}
-                <Heading className="mt-4" size={"md"}>Ownership History</Heading>
+                <ReviewStars stars={stars} />
             </Stack>
         </Link>
     )
