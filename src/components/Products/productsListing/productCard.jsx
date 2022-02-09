@@ -27,6 +27,7 @@ const ProductCard = ({ product: { id, label, price, stars } }) => {
                     // objectFit="cover"
                     src={'https://picsum.photos/seed/picsum/200/300'}
                     alt={label} />
+
                 <Heading fontFamily='Inter' color="brandGray.300" size="md" textTransform="capitalize">
                     {label}
                 </Heading>
