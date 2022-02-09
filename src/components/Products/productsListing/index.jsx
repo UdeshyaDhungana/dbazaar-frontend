@@ -1,17 +1,11 @@
-import React, { useState } from 'react';
 import {
     Flex,
-    Grid,
-    useDisclosure
+    Grid
 } from '@chakra-ui/react';
-
+import React from 'react';
 import ProductCard from './productCard';
-import ProductModal from './productModal';
-
 
 function ProductsListing({ products }) {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const [currentProduct, setCurrentProduct] = useState(null);
 
     return (
         <Flex
@@ -25,18 +19,9 @@ function ProductsListing({ products }) {
             >
                 {products.map((product) => (
                     <ProductCard
-                        onClick={() => {
-                            setCurrentProduct(product);
-                            onOpen();
-                        }}
                         key={product.id}
                         product={product} />
-                ))
-                }
-                <ProductModal
-                    product={currentProduct}
-                    isOpen={isOpen}
-                    onClose={onClose} />
+                ))}
             </Grid>
         </Flex>
     );
