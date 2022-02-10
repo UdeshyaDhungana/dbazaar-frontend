@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { createRef, useState } from 'react';
 import { Input, Icon, InputGroup, InputLeftElement, InputRightAddon, useMediaQuery } from '@chakra-ui/react';
 import { MagnifyingGlass, X } from 'phosphor-react';
 
 function SearchBar({ className, hideOnMobile }) {
     const [searchKeyWord, setSearchKeyWord] = useState('');
     const [isMobile] = useMediaQuery("(max-width: 768px)");
+
+    const searchInputRef = createRef();
 
     const handleChange = ({ target: { value } }) => {
         setSearchKeyWord(value);
@@ -19,6 +21,7 @@ function SearchBar({ className, hideOnMobile }) {
 
     const clearInput = () => {
         setSearchKeyWord('');
+        searchInputRef.current.focus();
     }
 
     return (
@@ -34,6 +37,7 @@ function SearchBar({ className, hideOnMobile }) {
                 />
                 <Input
                     value={searchKeyWord}
+                    ref={searchInputRef}
                     onChange={handleChange}
                     type='text'
                     bf='brandGray.200'
