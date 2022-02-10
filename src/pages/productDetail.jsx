@@ -1,7 +1,24 @@
 import {
-    Box, FormControl, FormHelperText, FormLabel, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent,
-    ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure, Textarea,
-    NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, useFormControlProps,
+    Box,
+    FormControl,
+    FormHelperText,
+    FormLabel,
+    Heading,
+    Image, Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    NumberDecrementStepper,
+    NumberIncrementStepper,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    Text,
+    Textarea,
+    useDisclosure
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
