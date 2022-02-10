@@ -2,7 +2,8 @@ import {
     Button as ChakraButton,
     FormControl, FormHelperText, FormLabel, Input,
     Modal, ModalBody,
-    ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure
+    ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Text
+
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import Button from '../commons/atomic/button';
@@ -66,8 +67,13 @@ function Register({ label, title, onSubmit, children }) {
 
     return (
         <>
-            <Button shadow onClick={onOpen} className={"mx-4"}>
-                Register
+            <Button color='brandBlue.600'
+                border='1px solid'
+                borderColor='brandBlue.500'
+                borderRadius='lg' 
+                onClick={onOpen} 
+                className={"mx-4"}>
+                <Text fontFamily='Inter'>Register</Text>
             </Button>
             <Modal size={"3xl"} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
