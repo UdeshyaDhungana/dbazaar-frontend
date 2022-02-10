@@ -6,9 +6,9 @@ import {
 
 import { Star } from 'phosphor-react'
 
-function ReviewStars({ stars }) {
+function ReviewStars({ stars, className }) {
     return ( 
-        <Box display='flex' mt='2' alignItems='center'>
+        <Box className={className} display='flex' mt='2' alignItems='center'>
         {Array(5)
             .fill('')
             .map((_, i) => (
