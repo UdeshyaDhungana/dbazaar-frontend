@@ -7,6 +7,8 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import Button from '../commons/atomic/button';
+import { register } from '../../services/userService';
+import axios from 'axios';
 
 function Register({ label, title, onSubmit, children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -20,19 +22,31 @@ function Register({ label, title, onSubmit, children }) {
     const [lastName, setLastName] = useState('');
 
     // Keep track of errors
+    const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [passwordConfirmError, setPasswordConfirmError] = useState('');
 
+    const isUserNameValid = () => {
+        var re = /^\w+$/;
+        if (re.test(username))
+            return true;
+        return false;
+    }
+
     const generateErrors = () => {
         let errorPresent = false;
-        if (password.length < 8 || !isNaN(password)){
-            setPasswordError('Please choose password according to instructions');
+        if (!isUserNameValid()) {
+            setUsernameError("Letters, numbers and underscores only allowed.");
+            errorPresent = true;
+        }
+        if (password.length < 8 || !isNaN(password)) {
+            setPasswordError('Please choose password according to the instructions.');
             errorPresent = true;
         }
         else
             setPasswordError('');
         if (passwordConfirm !== password) {
-            setPasswordConfirmError('Please match passwords');
+            setPasswordConfirmError('Passwords do not match.');
             errorPresent = true;
         }
         else
@@ -53,118 +67,124 @@ function Register({ label, title, onSubmit, children }) {
     }
 
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(firstName)
-        console.log(lastName)
-        console.log(username)
-        console.log(email)
-        console.log(password)
-        console.log(passwordConfirm)
-        // Generate errors
-        console.log(generateErrors())
+        if (!generateErrors()) {
+            register({
+                username,
+                password,
+                email,
+                first_name: firstName,
+                last_name: lastName,
+            }).then(res => {
+                console.log(res);
+            }).catch(err => {
+                console.log(err);
+            })
+        }
     }
 
-    return (
-        <>
-            <Button color='brandBlue.600'
-                border='1px solid'
-                borderColor='brandBlue.500'
-                borderRadius='lg' 
-                onClick={onOpen} 
-                className={"mx-4"}>
-                <Text fontFamily='Inter'>Register</Text>
-            </Button>
-            <Modal size={"3xl"} isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <form onSubmit={handleSubmit}>
-                        <ModalHeader>User Registration</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>
-                            <div className='grid md:grid-cols-2 md:gap-4 mb-4'>
-                                <FormControl isRequired>
-                                    <FormLabel htmlFor='first-name'>First Name</FormLabel>
-                                    <Input
-                                        value={firstName}
-                                        onChange={({ target: { value } }) => { setFirstName(value) }}
-                                        id='first-name' />
-                                </FormControl>
-                                {/* Last name */}
-                                <FormControl isRequired>
-                                    <FormLabel htmlFor='last-name'>Last Name</FormLabel>
-                                    <Input
-
-                                        value={lastName}
-                                        onChange={({ target: { value } }) => { setLastName(value) }}
-                                        id='last-name' />
-                                </FormControl>
-                            </div>
-                            <div className="grid md:grid-cols-2 md:gap-4 mb-4">
-                                <FormControl isRequired>
-                                    <FormLabel htmlFor='username'>Username</FormLabel>
-                                    <Input
-                                        value={username}
-                                        onChange={({ target: { value } }) => { setUsername(value) }}
-                                        id='username' />
-                                </FormControl>
-                                {/* Last name */}
-                                <FormControl isRequired>
-                                    <FormLabel htmlFor='email'>Email</FormLabel>
-                                    <Input
-                                        type={"email"}
-                                        value={email}
-                                        onChange={({ target: { value } }) => { setEmail(value) }}
-                                        id='email' />
-                                </FormControl>
-                            </div>
-                            <FormControl className='mb-4' isRequired>
-                                <FormLabel htmlFor='password'>Password</FormLabel>
+return (
+    <>
+        <Button color='brandBlue.600'
+            border='1px solid'
+            borderColor='brandBlue.500'
+            borderRadius='lg'
+            onClick={onOpen}
+            className={"mx-4"}>
+            <Text fontFamily='Inter'>Register</Text>
+        </Button>
+        <Modal size={"3xl"} isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+                <form onSubmit={handleSubmit}>
+                    <ModalHeader>User Registration</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <div className='grid md:grid-cols-2 md:gap-4 mb-4'>
+                            <FormControl isRequired>
+                                <FormLabel htmlFor='first-name'>First Name</FormLabel>
                                 <Input
-                                    isInvalid={passwordError}
-                                    type={"password"}
-                                    value={password}
-                                    onChange={({ target: { value } }) => { setPassword(value) }}
-                                    id='password' />
-                                {passwordError &&
-                                    <FormHelperText color={"crimson"}>
-                                        Please enter password according to the instructions below
-                                    </FormHelperText>}
-                                <FormHelperText>
-                                    <ul>
-                                        <li>Can't be too similar to your personal information</li>
-                                        <li>Must contain atleast 8 characters</li>
-                                        <li>Can't be commonly used password</li>
-                                        <li>Can't be entirely numeric</li>
-                                    </ul>
-                                </FormHelperText>
+                                    value={firstName}
+                                    onChange={({ target: { value } }) => { setFirstName(value) }}
+                                    id='first-name' />
                             </FormControl>
                             {/* Last name */}
                             <FormControl isRequired>
-                                <FormLabel htmlFor='password-confirm'>Confirm Password</FormLabel>
+                                <FormLabel htmlFor='last-name'>Last Name</FormLabel>
                                 <Input
-                                    isInvalid={passwordConfirmError}
-                                    type={"password"}
-                                    value={passwordConfirm}
-                                    onChange={({ target: { value } }) => { setPasswordConfirm(value) }}
-                                    id='password-confirm' />
-                                {passwordConfirmError &&
-                                    <FormHelperText color={"crimson"}>
-                                        Passwords do not match
-                                    </FormHelperText>}
+
+                                    value={lastName}
+                                    onChange={({ target: { value } }) => { setLastName(value) }}
+                                    id='last-name' />
                             </FormControl>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button type="submit" mr={3} filled>Register</Button>
-                            <ChakraButton onClick={clearForm}>
-                                Clear
-                            </ChakraButton>
-                        </ModalFooter>
-                    </form>
-                </ModalContent>
-            </Modal>
-        </>
-    );
+                        </div>
+                        <div className="grid md:grid-cols-2 md:gap-4 mb-4">
+                            <FormControl isRequired>
+                                <FormLabel htmlFor='username'>Username</FormLabel>
+                                <Input
+                                    value={username}
+                                    onChange={({ target: { value } }) => { setUsername(value) }}
+                                    id='username' />
+                                <FormHelperText color={"crimson"}>{usernameError}</FormHelperText>
+                            </FormControl>
+                            {/* Last name */}
+                            <FormControl isRequired>
+                                <FormLabel htmlFor='email'>Email</FormLabel>
+                                <Input
+                                    type={"email"}
+                                    value={email}
+                                    onChange={({ target: { value } }) => { setEmail(value) }}
+                                    id='email' />
+                            </FormControl>
+                        </div>
+                        <FormControl className='mb-4' isRequired>
+                            <FormLabel htmlFor='password'>Password</FormLabel>
+                            <Input
+                                isInvalid={passwordError}
+                                type={"password"}
+                                value={password}
+                                onChange={({ target: { value } }) => { setPassword(value) }}
+                                id='password' />
+                            {passwordError &&
+                                <FormHelperText color={"crimson"}>
+                                    {passwordError}
+                                </FormHelperText>}
+                            <FormHelperText>
+                                <ul>
+                                    <li>Can't be too similar to your personal information</li>
+                                    <li>Must contain atleast 8 characters</li>
+                                    <li>Can't be commonly used password</li>
+                                    <li>Can't be entirely numeric</li>
+                                </ul>
+                            </FormHelperText>
+                        </FormControl>
+                        {/* Last name */}
+                        <FormControl isRequired>
+                            <FormLabel htmlFor='password-confirm'>Confirm Password</FormLabel>
+                            <Input
+                                isInvalid={passwordConfirmError}
+                                type={"password"}
+                                value={passwordConfirm}
+                                onChange={({ target: { value } }) => { setPasswordConfirm(value) }}
+                                id='password-confirm' />
+                            {passwordConfirmError &&
+                                <FormHelperText color={"crimson"}>
+                                    {passwordConfirmError}
+                                </FormHelperText>}
+                        </FormControl>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button type="submit" mr={3} filled>Register</Button>
+                        <ChakraButton onClick={clearForm}>
+                            Clear
+                        </ChakraButton>
+                    </ModalFooter>
+                </form>
+            </ModalContent>
+        </Modal>
+    </>
+);
 }
 
 export default Register;
