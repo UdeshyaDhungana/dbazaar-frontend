@@ -2,14 +2,18 @@ import {
     Button as ChakraButton,
     FormControl, FormHelperText, FormLabel, Input,
     Modal, ModalBody,
-    ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Text
+    ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Text, useToast
 
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import Button from '../commons/atomic/button';
+import { register } from '../../services/userService';
+import unknownErrorToast from '../commons/atomic/unknownErrorToast';
 
-function Register({ label, title, onSubmit, children }) {
+
+function Register() {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const toast = useToast();
 
     /* Register Form states */
     const [username, setUsername] = useState('');
@@ -20,24 +24,51 @@ function Register({ label, title, onSubmit, children }) {
     const [lastName, setLastName] = useState('');
 
     // Keep track of errors
-    const [passwordError, setPasswordError] = useState('');
-    const [passwordConfirmError, setPasswordConfirmError] = useState('');
+    const [emailError, setEmailError] = useState([]);
+    const [usernameError, setUsernameError] = useState([]);
+    const [passwordError, setPasswordError] = useState([]);
+    const [passwordConfirmError, setPasswordConfirmError] = useState([]);
+
+    const isUserNameValid = () => {
+        var re = /^\w+$/;
+        if (re.test(username))
+            return true;
+        return false;
+    }
 
     const generateErrors = () => {
         let errorPresent = false;
-        if (password.length < 8 || !isNaN(password)){
-            setPasswordError('Please choose password according to instructions');
+        if (!isUserNameValid()) {
+            setUsernameError(["Letters, numbers and underscores only allowed."]);
             errorPresent = true;
-        }
-        else
-            setPasswordError('');
+        } else
+            setUsernameError([])
+        if (password.length < 8 || !isNaN(password)) {
+            setPasswordError(['Please choose password according to the instructions.']);
+            errorPresent = true;
+        } else
+            setPasswordError([])
         if (passwordConfirm !== password) {
-            setPasswordConfirmError('Please match passwords');
+            setPasswordConfirmError(['Passwords do not match.']);
             errorPresent = true;
-        }
-        else
-            setPasswordConfirmError('');
+        } else
+            setPasswordConfirmError([])
         return errorPresent;
+    }
+
+    const generateErrorsAfterResponse = (data) => {
+        const mapping = {
+            'username': setUsernameError,
+            'password': setPasswordError,
+            'email': setEmailError
+        }
+        Object.keys(data).forEach((key) => {
+            mapping[key](data[key])
+        })
+        const remainingFields = ['username', 'password', 'email'].filter(x => !Object.keys(data).includes(x));
+        remainingFields.forEach((key) => {
+            mapping[key]([]);
+        })
     }
 
     const clearForm = () => {
@@ -48,21 +79,38 @@ function Register({ label, title, onSubmit, children }) {
         setFirstName('');
         setLastName('');
         // clear errors
-        setPasswordError('');
-        setPasswordConfirmError('');
+        setUsernameError([]);
+        setPasswordError([]);
+        setPasswordConfirmError([]);
     }
 
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(firstName)
-        console.log(lastName)
-        console.log(username)
-        console.log(email)
-        console.log(password)
-        console.log(passwordConfirm)
-        // Generate errors
-        console.log(generateErrors())
+        if (!generateErrors()) {
+            register({
+                username,
+                password,
+                email,
+                first_name: firstName,
+                last_name: lastName,
+            }).then(_ => {
+                onClose();
+                toast({
+                    title: 'Account created.',
+                    description: "You may now login",
+                    status: 'success',
+                    duration: 4000,
+                    isClosable: false,
+                })
+            }).catch(({ response }) => {
+                if (response) {
+                    generateErrorsAfterResponse(response.data);
+                } else {
+                    unknownErrorToast(toast);
+                }
+            })
+        }
     }
 
     return (
@@ -70,8 +118,8 @@ function Register({ label, title, onSubmit, children }) {
             <Button color='brandBlue.600'
                 border='1px solid'
                 borderColor='brandBlue.500'
-                borderRadius='lg' 
-                onClick={onOpen} 
+                borderRadius='lg'
+                onClick={onOpen}
                 className={"mx-4"}>
                 <Text fontFamily='Inter'>Register</Text>
             </Button>
@@ -104,9 +152,13 @@ function Register({ label, title, onSubmit, children }) {
                                 <FormControl isRequired>
                                     <FormLabel htmlFor='username'>Username</FormLabel>
                                     <Input
+                                        isInvalid={usernameError.length !== 0}
                                         value={username}
                                         onChange={({ target: { value } }) => { setUsername(value) }}
                                         id='username' />
+                                    {usernameError.map(error => (
+                                        <FormHelperText color={"crimson"}>{error}</FormHelperText>
+                                    ))}
                                 </FormControl>
                                 {/* Last name */}
                                 <FormControl isRequired>
@@ -116,20 +168,25 @@ function Register({ label, title, onSubmit, children }) {
                                         value={email}
                                         onChange={({ target: { value } }) => { setEmail(value) }}
                                         id='email' />
+                                    {emailError.map(error => (
+                                        <FormHelperText color={"crimson"}>
+                                            {error}
+                                        </FormHelperText>
+                                    ))}
                                 </FormControl>
                             </div>
                             <FormControl className='mb-4' isRequired>
                                 <FormLabel htmlFor='password'>Password</FormLabel>
                                 <Input
-                                    isInvalid={passwordError}
+                                    isInvalid={passwordError.length !== 0}
                                     type={"password"}
                                     value={password}
                                     onChange={({ target: { value } }) => { setPassword(value) }}
                                     id='password' />
-                                {passwordError &&
+                                {passwordError.map(error => (
                                     <FormHelperText color={"crimson"}>
-                                        Please enter password according to the instructions below
-                                    </FormHelperText>}
+                                        {error}
+                                    </FormHelperText>))}
                                 <FormHelperText>
                                     <ul>
                                         <li>Can't be too similar to your personal information</li>
@@ -143,15 +200,16 @@ function Register({ label, title, onSubmit, children }) {
                             <FormControl isRequired>
                                 <FormLabel htmlFor='password-confirm'>Confirm Password</FormLabel>
                                 <Input
-                                    isInvalid={passwordConfirmError}
+                                    isInvalid={passwordConfirmError.length !== 0}
                                     type={"password"}
                                     value={passwordConfirm}
                                     onChange={({ target: { value } }) => { setPasswordConfirm(value) }}
                                     id='password-confirm' />
-                                {passwordConfirmError &&
+                                {passwordConfirmError.map(error => (
                                     <FormHelperText color={"crimson"}>
-                                        Passwords do not match
-                                    </FormHelperText>}
+                                        {passwordConfirmError}
+                                    </FormHelperText>
+                                ))}
                             </FormControl>
                         </ModalBody>
                         <ModalFooter>
