@@ -3,7 +3,7 @@ function unknownErrorToast(toast) {
     toast({
         title: "Unknown Error",
         description: "An unknown error occured",
-        duration: 5000,
+        duration: 4000,
         status: "error",
         isClosable: false,
     })

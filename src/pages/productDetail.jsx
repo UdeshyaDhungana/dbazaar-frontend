@@ -20,14 +20,17 @@ import {
     Textarea,
     useDisclosure
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { UserContext } from '../App';
 import Button from '../components/commons/atomic/button';
 import ReviewStars from '../components/commons/reviewStars';
 import OwnershipHistory from '../components/ownershipHistory';
 import { productsList } from '../components/Products';
 
 function ProductDetail() {
+    const user = useContext(UserContext);
+    console.log("User is", user);
     const { id } = useParams();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -71,7 +74,7 @@ function ProductDetail() {
                     <Text>By {postedBy}</Text>
                     <ReviewStars className={'mt-2'} stars={stars} />
                     <div className='mt-2'>Rs. {price}</div>
-                    <Button className="mt-3" onClick={onOpen}>Place Bid</Button>
+                    <Button disabled={!user} className="mt-3" onClick={onOpen}>Place Bid</Button>
                     <ProductBidForm
                         isOpen={isOpen}
                         handlePlaceBid={handlePlaceBid}
