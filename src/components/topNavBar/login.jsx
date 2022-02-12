@@ -6,10 +6,10 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import Button from '../commons/atomic/button';
-import { login } from '../../services/userService'
+import { getCurrentUser, login, setJwt } from '../../services/userService'
 import unknownErrorToast from '../commons/atomic/unknownErrorToast';
 
-function Login() {
+function Login({ setUser }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast();
 
@@ -29,9 +29,16 @@ function Login() {
         login({
             username,
             password
-        }).then(res => {
-            console.log(res);
-            // Now all the important stuffs start here
+        }).then(({ data }) => {
+            setJwt(data);
+            toast({
+                title: "Success!",
+                description: "User logged in successfully.",
+                duration: 4000,
+                status: "success"
+            })
+            onClose();
+            setUser(getCurrentUser());
         }).catch(({ response }) => {
             if (response){
                 setErrorMessage('The password or username is incorrect')
@@ -81,7 +88,7 @@ function Login() {
                             </FormControl>
                         </ModalBody>
                         <ModalFooter>
-                            <Button type="submit" onClick={handleSubmit} mr={3} filled>Login</Button>
+                            <Button type="submit" onClick={handleSubmit} mr={3}>Login</Button>
                             <ChakraButton onClick={clearForm}>
                                 Clear
                             </ChakraButton>

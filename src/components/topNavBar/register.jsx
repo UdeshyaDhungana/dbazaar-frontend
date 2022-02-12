@@ -123,7 +123,7 @@ function Register() {
                 className={"mx-4"}>
                 <Text fontFamily='Inter'>Register</Text>
             </Button>
-            <Modal size={"3xl"} isOpen={isOpen} onClose={onClose}>
+            <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <form onSubmit={handleSubmit}>
@@ -213,7 +213,7 @@ function Register() {
                             </FormControl>
                         </ModalBody>
                         <ModalFooter>
-                            <Button type="submit" mr={3} filled>Register</Button>
+                            <Button type="submit" mr={3} >Register</Button>
                             <ChakraButton onClick={clearForm}>
                                 Clear
                             </ChakraButton>

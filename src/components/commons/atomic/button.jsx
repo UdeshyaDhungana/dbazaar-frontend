@@ -11,9 +11,10 @@ function Button({
     ...props }) {
     return (
         <ChakraButton
-            colorScheme={'blue'}
-            variant={filled ? 'solid' : 'outline'}
+            colorScheme={"blue"}
+            variant={'outline'}
             boxShadow={shadow ? 'md' : 'inherit'}
+            borderColor={'brandBlue.500'}
             {...props}
         >
             {children}
