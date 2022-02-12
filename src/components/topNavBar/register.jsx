@@ -2,16 +2,18 @@ import {
     Button as ChakraButton,
     FormControl, FormHelperText, FormLabel, Input,
     Modal, ModalBody,
-    ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Text
+    ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Text, useToast
 
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import Button from '../commons/atomic/button';
 import { register } from '../../services/userService';
-import axios from 'axios';
+import unknownErrorToast from '../commons/atomic/unknownErrorToast';
 
-function Register({ label, title, onSubmit, children }) {
+
+function Register() {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const toast = useToast();
 
     /* Register Form states */
     const [username, setUsername] = useState('');
@@ -22,9 +24,10 @@ function Register({ label, title, onSubmit, children }) {
     const [lastName, setLastName] = useState('');
 
     // Keep track of errors
-    const [usernameError, setUsernameError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [passwordConfirmError, setPasswordConfirmError] = useState('');
+    const [emailError, setEmailError] = useState([]);
+    const [usernameError, setUsernameError] = useState([]);
+    const [passwordError, setPasswordError] = useState([]);
+    const [passwordConfirmError, setPasswordConfirmError] = useState([]);
 
     const isUserNameValid = () => {
         var re = /^\w+$/;
@@ -36,22 +39,36 @@ function Register({ label, title, onSubmit, children }) {
     const generateErrors = () => {
         let errorPresent = false;
         if (!isUserNameValid()) {
-            setUsernameError("Letters, numbers and underscores only allowed.");
+            setUsernameError(["Letters, numbers and underscores only allowed."]);
             errorPresent = true;
-        }
+        } else
+            setUsernameError([])
         if (password.length < 8 || !isNaN(password)) {
-            setPasswordError('Please choose password according to the instructions.');
+            setPasswordError(['Please choose password according to the instructions.']);
             errorPresent = true;
-        }
-        else
-            setPasswordError('');
+        } else
+            setPasswordError([])
         if (passwordConfirm !== password) {
-            setPasswordConfirmError('Passwords do not match.');
+            setPasswordConfirmError(['Passwords do not match.']);
             errorPresent = true;
-        }
-        else
-            setPasswordConfirmError('');
+        } else
+            setPasswordConfirmError([])
         return errorPresent;
+    }
+
+    const generateErrorsAfterResponse = (data) => {
+        const mapping = {
+            'username': setUsernameError,
+            'password': setPasswordError,
+            'email': setEmailError
+        }
+        Object.keys(data).forEach((key) => {
+            mapping[key](data[key])
+        })
+        const remainingFields = ['username', 'password', 'email'].filter(x => !Object.keys(data).includes(x));
+        remainingFields.forEach((key) => {
+            mapping[key]([]);
+        })
     }
 
     const clearForm = () => {
@@ -62,8 +79,9 @@ function Register({ label, title, onSubmit, children }) {
         setFirstName('');
         setLastName('');
         // clear errors
-        setPasswordError('');
-        setPasswordConfirmError('');
+        setUsernameError([]);
+        setPasswordError([]);
+        setPasswordConfirmError([]);
     }
 
 
@@ -76,115 +94,135 @@ function Register({ label, title, onSubmit, children }) {
                 email,
                 first_name: firstName,
                 last_name: lastName,
-            }).then(res => {
-                console.log(res);
-            }).catch(err => {
-                console.log(err);
+            }).then(_ => {
+                onClose();
+                toast({
+                    title: 'Account created.',
+                    description: "You may now login",
+                    status: 'success',
+                    duration: 4000,
+                    isClosable: false,
+                })
+            }).catch(({ response }) => {
+                if (response) {
+                    generateErrorsAfterResponse(response.data);
+                } else {
+                    unknownErrorToast(toast);
+                }
             })
         }
     }
 
-return (
-    <>
-        <Button color='brandBlue.600'
-            border='1px solid'
-            borderColor='brandBlue.500'
-            borderRadius='lg'
-            onClick={onOpen}
-            className={"mx-4"}>
-            <Text fontFamily='Inter'>Register</Text>
-        </Button>
-        <Modal size={"3xl"} isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-                <form onSubmit={handleSubmit}>
-                    <ModalHeader>User Registration</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <div className='grid md:grid-cols-2 md:gap-4 mb-4'>
-                            <FormControl isRequired>
-                                <FormLabel htmlFor='first-name'>First Name</FormLabel>
-                                <Input
-                                    value={firstName}
-                                    onChange={({ target: { value } }) => { setFirstName(value) }}
-                                    id='first-name' />
-                            </FormControl>
-                            {/* Last name */}
-                            <FormControl isRequired>
-                                <FormLabel htmlFor='last-name'>Last Name</FormLabel>
-                                <Input
+    return (
+        <>
+            <Button color='brandBlue.600'
+                border='1px solid'
+                borderColor='brandBlue.500'
+                borderRadius='lg'
+                onClick={onOpen}
+                className={"mx-4"}>
+                <Text fontFamily='Inter'>Register</Text>
+            </Button>
+            <Modal size={"3xl"} isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <form onSubmit={handleSubmit}>
+                        <ModalHeader>User Registration</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <div className='grid md:grid-cols-2 md:gap-4 mb-4'>
+                                <FormControl isRequired>
+                                    <FormLabel htmlFor='first-name'>First Name</FormLabel>
+                                    <Input
+                                        value={firstName}
+                                        onChange={({ target: { value } }) => { setFirstName(value) }}
+                                        id='first-name' />
+                                </FormControl>
+                                {/* Last name */}
+                                <FormControl isRequired>
+                                    <FormLabel htmlFor='last-name'>Last Name</FormLabel>
+                                    <Input
 
-                                    value={lastName}
-                                    onChange={({ target: { value } }) => { setLastName(value) }}
-                                    id='last-name' />
-                            </FormControl>
-                        </div>
-                        <div className="grid md:grid-cols-2 md:gap-4 mb-4">
-                            <FormControl isRequired>
-                                <FormLabel htmlFor='username'>Username</FormLabel>
+                                        value={lastName}
+                                        onChange={({ target: { value } }) => { setLastName(value) }}
+                                        id='last-name' />
+                                </FormControl>
+                            </div>
+                            <div className="grid md:grid-cols-2 md:gap-4 mb-4">
+                                <FormControl isRequired>
+                                    <FormLabel htmlFor='username'>Username</FormLabel>
+                                    <Input
+                                        isInvalid={usernameError.length !== 0}
+                                        value={username}
+                                        onChange={({ target: { value } }) => { setUsername(value) }}
+                                        id='username' />
+                                    {usernameError.map(error => (
+                                        <FormHelperText color={"crimson"}>{error}</FormHelperText>
+                                    ))}
+                                </FormControl>
+                                {/* Last name */}
+                                <FormControl isRequired>
+                                    <FormLabel htmlFor='email'>Email</FormLabel>
+                                    <Input
+                                        type={"email"}
+                                        value={email}
+                                        onChange={({ target: { value } }) => { setEmail(value) }}
+                                        id='email' />
+                                    {emailError.map(error => (
+                                        <FormHelperText color={"crimson"}>
+                                            {error}
+                                        </FormHelperText>
+                                    ))}
+                                </FormControl>
+                            </div>
+                            <FormControl className='mb-4' isRequired>
+                                <FormLabel htmlFor='password'>Password</FormLabel>
                                 <Input
-                                    value={username}
-                                    onChange={({ target: { value } }) => { setUsername(value) }}
-                                    id='username' />
-                                <FormHelperText color={"crimson"}>{usernameError}</FormHelperText>
+                                    isInvalid={passwordError.length !== 0}
+                                    type={"password"}
+                                    value={password}
+                                    onChange={({ target: { value } }) => { setPassword(value) }}
+                                    id='password' />
+                                {passwordError.map(error => (
+                                    <FormHelperText color={"crimson"}>
+                                        {error}
+                                    </FormHelperText>))}
+                                <FormHelperText>
+                                    <ul>
+                                        <li>Can't be too similar to your personal information</li>
+                                        <li>Must contain atleast 8 characters</li>
+                                        <li>Can't be commonly used password</li>
+                                        <li>Can't be entirely numeric</li>
+                                    </ul>
+                                </FormHelperText>
                             </FormControl>
                             {/* Last name */}
                             <FormControl isRequired>
-                                <FormLabel htmlFor='email'>Email</FormLabel>
+                                <FormLabel htmlFor='password-confirm'>Confirm Password</FormLabel>
                                 <Input
-                                    type={"email"}
-                                    value={email}
-                                    onChange={({ target: { value } }) => { setEmail(value) }}
-                                    id='email' />
+                                    isInvalid={passwordConfirmError.length !== 0}
+                                    type={"password"}
+                                    value={passwordConfirm}
+                                    onChange={({ target: { value } }) => { setPasswordConfirm(value) }}
+                                    id='password-confirm' />
+                                {passwordConfirmError.map(error => (
+                                    <FormHelperText color={"crimson"}>
+                                        {passwordConfirmError}
+                                    </FormHelperText>
+                                ))}
                             </FormControl>
-                        </div>
-                        <FormControl className='mb-4' isRequired>
-                            <FormLabel htmlFor='password'>Password</FormLabel>
-                            <Input
-                                isInvalid={passwordError}
-                                type={"password"}
-                                value={password}
-                                onChange={({ target: { value } }) => { setPassword(value) }}
-                                id='password' />
-                            {passwordError &&
-                                <FormHelperText color={"crimson"}>
-                                    {passwordError}
-                                </FormHelperText>}
-                            <FormHelperText>
-                                <ul>
-                                    <li>Can't be too similar to your personal information</li>
-                                    <li>Must contain atleast 8 characters</li>
-                                    <li>Can't be commonly used password</li>
-                                    <li>Can't be entirely numeric</li>
-                                </ul>
-                            </FormHelperText>
-                        </FormControl>
-                        {/* Last name */}
-                        <FormControl isRequired>
-                            <FormLabel htmlFor='password-confirm'>Confirm Password</FormLabel>
-                            <Input
-                                isInvalid={passwordConfirmError}
-                                type={"password"}
-                                value={passwordConfirm}
-                                onChange={({ target: { value } }) => { setPasswordConfirm(value) }}
-                                id='password-confirm' />
-                            {passwordConfirmError &&
-                                <FormHelperText color={"crimson"}>
-                                    {passwordConfirmError}
-                                </FormHelperText>}
-                        </FormControl>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button type="submit" mr={3} filled>Register</Button>
-                        <ChakraButton onClick={clearForm}>
-                            Clear
-                        </ChakraButton>
-                    </ModalFooter>
-                </form>
-            </ModalContent>
-        </Modal>
-    </>
-);
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button type="submit" mr={3} filled>Register</Button>
+                            <ChakraButton onClick={clearForm}>
+                                Clear
+                            </ChakraButton>
+                        </ModalFooter>
+                    </form>
+                </ModalContent>
+            </Modal>
+        </>
+    );
 }
 
 export default Register;

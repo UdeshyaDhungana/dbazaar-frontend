@@ -2,21 +2,43 @@ import {
     Button as ChakraButton,
     FormControl, FormLabel, Input,
     Modal, ModalBody,
-    ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Text
+    ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Text, FormHelperText, useToast
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import Button from '../commons/atomic/button';
+import { login } from '../../services/userService'
+import unknownErrorToast from '../commons/atomic/unknownErrorToast';
 
 function Login() {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const toast = useToast();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const clearForm = () => {
+        setUsername('');
+        setPassword('');
+        setErrorMessage('');
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(username)
-        console.log(password)
+        login({
+            username,
+            password
+        }).then(res => {
+            console.log(res);
+            // Now all the important stuffs start here
+        }).catch(({ response }) => {
+            if (response){
+                setErrorMessage('The password or username is incorrect')
+            } else {
+                unknownErrorToast(toast);
+            }
+        })
     }
 
     return (
@@ -52,12 +74,16 @@ function Login() {
                                     type={"password"}
                                     onChange={({ target: { value } }) => { setPassword(value) }}
                                     id='password' />
+                                {errorMessage &&
+                                    <FormHelperText color={"crimson"}>
+                                        {errorMessage}
+                                    </FormHelperText>}
                             </FormControl>
                         </ModalBody>
                         <ModalFooter>
                             <Button type="submit" onClick={handleSubmit} mr={3} filled>Login</Button>
-                            <ChakraButton onClick={onClose}>
-                                Close
+                            <ChakraButton onClick={clearForm}>
+                                Clear
                             </ChakraButton>
                         </ModalFooter>
                     </form>
