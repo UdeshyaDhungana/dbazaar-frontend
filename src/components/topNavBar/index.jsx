@@ -69,7 +69,7 @@ export default function TopNavBar({ setUser }) {
             alt='DLogo'
           />
           <Link to="/">
-            <Box><Heading color='brandBlue.100'>DecentBazaar</Heading></Box>
+            <Box><Heading size ="lg" color='brandBlue.100'>DecentBazaar</Heading></Box>
           </Link>
           <SearchBar hideOnMobile />
         </HStack>
