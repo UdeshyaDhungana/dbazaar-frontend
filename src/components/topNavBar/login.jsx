@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import Button from '../commons/atomic/button';
-import { getCurrentUser, login, setJwt } from '../../services/userService'
+import { getCurrentUser, createToken, setToken } from '../../services/userService'
 import unknownErrorToast from '../commons/atomic/unknownErrorToast';
 
 function Login({ setUser }) {
@@ -26,19 +26,21 @@ function Login({ setUser }) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        login({
+        createToken({
             username,
             password
         }).then(({ data }) => {
-            setJwt(data);
+            // Save to localstorage
+            setToken(data);
+            onClose();
+            // Update global state
+            setUser(getCurrentUser());
             toast({
                 title: "Success!",
                 description: "User logged in successfully.",
                 duration: 4000,
                 status: "success"
             })
-            onClose();
-            setUser(getCurrentUser());
         }).catch(({ response }) => {
             if (response){
                 setErrorMessage('The password or username is incorrect')
