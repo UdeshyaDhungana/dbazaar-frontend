@@ -67,7 +67,7 @@ export default function TopNavBar({ setUser }) {
         </HStack>
         <Flex alignItems={'center'}>
           {!user && <Box display={isMobile ? 'none' : 'inherit'} className='flex'>
-            <Login />
+            <Login setUser={setUser} />
             <Register />
           </Box>}
           {/* Profile Section */}
@@ -88,6 +88,7 @@ export default function TopNavBar({ setUser }) {
               </MenuButton>
               <MenuList>
                 <MenuItem>Profile</MenuItem>
+                <MenuItem><Link to="/products/add">Add Product</Link></MenuItem>
                 <MenuDivider />
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </MenuList>

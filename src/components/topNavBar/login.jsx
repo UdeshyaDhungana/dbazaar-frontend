@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import Button from '../commons/atomic/button';
-import { getCurrentUser, createToken, setToken } from '../../services/userService'
+import { createToken, getCurrentUser, saveToken } from '../../services/userService'
 import unknownErrorToast from '../commons/atomic/unknownErrorToast';
 
 function Login({ setUser }) {
@@ -30,11 +30,9 @@ function Login({ setUser }) {
             username,
             password
         }).then(({ data }) => {
-            // Save to localstorage
-            setToken(data);
             onClose();
-            // Update global state
-            setUser(getCurrentUser());
+            saveToken(data);
+            setUser(getCurrentUser())
             toast({
                 title: "Success!",
                 description: "User logged in successfully.",
