@@ -8,15 +8,15 @@ export async function register(user){
     return http.post(usersApi, user);
 }
 
-export async function login(user){
+export async function createToken(user){
     return http.post(loginApi, user);
 }
 
-export function logout(){
+export function removeToken(){
     localStorage.removeItem('accessToken');
 }
 
-export async function setJwt({ access }){
+export async function setToken({ access }){
     localStorage.setItem('accessToken', access);
 }
 

@@ -4,14 +4,14 @@ import {
   Icon, IconButton,
   Image,
   Menu,
-  MenuButton, MenuDivider, MenuItem, MenuList, useColorModeValue, useDisclosure, useMediaQuery, useToast
+  MenuButton, MenuDivider, MenuItem, MenuList, useColorModeValue, useDisclosure, useMediaQuery
 } from '@chakra-ui/react';
 import { List, X } from 'phosphor-react';
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../App';
 import logo from '../../logo.png';
-import { logout } from '../../services/userService';
+import { removeToken } from '../../services/userService';
 import Login from './login';
 import Register from './register';
 import SearchBar from './searchBar';
@@ -21,18 +21,10 @@ export default function TopNavBar({ setUser }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const user = useContext(UserContext);
-  const toast = useToast();
 
   const handleLogout = () => {
-    logout();
-    setUser();
-    toast({
-      title: "Logged out",
-      description: "User logged out successfully",
-      status: "success",
-      duration: 5000,
-      isClosable: false,
-    })
+    removeToken();
+    window.location.href = "/";
   }
 
   return (
@@ -75,7 +67,7 @@ export default function TopNavBar({ setUser }) {
         </HStack>
         <Flex alignItems={'center'}>
           {!user && <Box display={isMobile ? 'none' : 'inherit'} className='flex'>
-            <Login setUser={setUser} />
+            <Login />
             <Register />
           </Box>}
           {/* Profile Section */}
