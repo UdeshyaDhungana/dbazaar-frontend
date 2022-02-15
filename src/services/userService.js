@@ -2,14 +2,14 @@ import jwtDecode from 'jwt-decode';
 import http, { baseUrl } from './httpService';
 
 const usersApi = baseUrl + '/auth/users/';
-const loginApi = baseUrl + '/auth/jwt/create'
+const createJwtApi = baseUrl + '/auth/jwt/create'
 
 export async function register(user){
     return http.post(usersApi, user);
 }
 
 export async function createToken(user){
-    return http.post(loginApi, user);
+    return http.post(createJwtApi, user);
 }
 
 export function removeToken(){

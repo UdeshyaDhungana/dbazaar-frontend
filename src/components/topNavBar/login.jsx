@@ -30,9 +30,9 @@ function Login({ setUser }) {
             username,
             password
         }).then(({ data }) => {
+            onClose();
             saveToken(data);
             setUser(getCurrentUser())
-            onClose();
             toast({
                 title: "Success!",
                 description: "User logged in successfully.",

@@ -21,7 +21,7 @@ import {
     useDisclosure
 } from '@chakra-ui/react';
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { UserContext } from '../App';
 import Button from '../components/commons/atomic/button';
 import ReviewStars from '../components/commons/reviewStars';
@@ -60,6 +60,7 @@ function ProductDetail() {
     }
 
     return (
+        !isNaN(id) && Number.isInteger(Number(id)) && id > 0?
         <>
             <div className="grid my-10 md:grid-cols-2">
                 <Box className='justify-self-center'>
@@ -87,8 +88,8 @@ function ProductDetail() {
                 <Heading className='mb-3'>Ownership History</Heading>
                 <OwnershipHistory />
             </div>
-        </>
-    );
+        </>:<Navigate to="/" />
+    )
 }
 
 const ProductBidForm = ({ isOpen, onClose, handlePlaceBid }) => {

@@ -88,6 +88,7 @@ export default function TopNavBar({ setUser }) {
               </MenuButton>
               <MenuList>
                 <MenuItem>Profile</MenuItem>
+                <MenuItem><Link to="/products/add">Add Product</Link></MenuItem>
                 <MenuDivider />
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </MenuList>
