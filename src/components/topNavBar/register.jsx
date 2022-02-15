@@ -105,7 +105,8 @@ function Register() {
                 })
             }).catch(({ response }) => {
                 if (response) {
-                    generateErrorsAfterResponse(response.data);
+                    if (!Array.isArray(response))
+                        generateErrorsAfterResponse(response.data);
                 } else {
                     unknownErrorToast(toast);
                 }

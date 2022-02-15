@@ -67,7 +67,7 @@ export default function TopNavBar({ setUser }) {
         </HStack>
         <Flex alignItems={'center'}>
           {!user && <Box display={isMobile ? 'none' : 'inherit'} className='flex'>
-            <Login />
+            <Login setUser={setUser} />
             <Register />
           </Box>}
           {/* Profile Section */}

@@ -16,7 +16,7 @@ export function removeToken(){
     localStorage.removeItem('accessToken');
 }
 
-export async function setToken({ access }){
+export function saveToken({ access }){
     localStorage.setItem('accessToken', access);
 }
 

@@ -30,7 +30,6 @@ import { productsList } from '../components/Products';
 
 function ProductDetail() {
     const user = useContext(UserContext);
-    console.log("User is", user);
     const { id } = useParams();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
