@@ -21,7 +21,7 @@ function App() {
       <UserContext.Provider value={user}>
         <BrowserRouter>
           <TopNavBar setUser={setUser} />
-          <div className="md:px-12 px-2 pt-7 pb-10">
+          <div className="md:px-8 px-1 mt-7 mb-10">
             <Routes>
               <Route path="about-us" exact element={<AboutUs />} />
               <Route path="privacy-policy" exact element={<PrivacyPolicy />} />
