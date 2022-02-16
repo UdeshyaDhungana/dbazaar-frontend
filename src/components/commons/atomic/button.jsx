@@ -12,7 +12,7 @@ function Button({
     return (
         <ChakraButton
             colorScheme={"blue"}
-            variant={'outline'}
+            variant={filled?'solid' : 'outline'}
             boxShadow={shadow ? 'md' : 'inherit'}
             borderColor={'brandBlue.500'}
             {...props}

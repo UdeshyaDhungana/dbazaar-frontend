@@ -6,6 +6,7 @@ import { productsList } from '../components/Products'
 import { useEffect } from 'react';
 
 import ProductsListing from '../components/Products/productsListing';
+import { Heading } from '@chakra-ui/react';
 
 
 function MyProductListing() {
@@ -23,7 +24,10 @@ function MyProductListing() {
 function MyProducts() {
     const user = useContext(UserContext)
     return (user ?
+        <>
+        <Heading size={"lg"}>My Products</Heading>
         <MyProductListing />
+        </>
         : <Navigate to="/" />)
 }
 

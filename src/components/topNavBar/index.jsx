@@ -90,6 +90,7 @@ export default function TopNavBar({ setUser }) {
                 <MenuItem>Profile</MenuItem>
                 <MenuItem><Link to="/products/add">Add Product</Link></MenuItem>
                 <MenuItem><Link to="/products/mine">My Products</Link></MenuItem>
+                <MenuItem><Link to="/products/my-bids">My Bids</Link></MenuItem>
                 <MenuDivider />
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </MenuList>

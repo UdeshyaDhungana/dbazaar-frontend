@@ -9,6 +9,8 @@ import {
     ModalCloseButton,
     ModalContent,
     ModalFooter,
+    Input,
+    Icon,
     ModalHeader,
     ModalOverlay,
     NumberDecrementStepper,
@@ -16,8 +18,9 @@ import {
     NumberInput,
     NumberInputField,
     NumberInputStepper, Table, Tbody, Td, Text, Th,
-    Textarea, Thead, Tr, useDisclosure
+    Textarea, Thead, Tr, useDisclosure, InputRightAddon, InputGroup
 } from '@chakra-ui/react';
+import { ChatText } from 'phosphor-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { UserContext } from '../App';
@@ -25,6 +28,8 @@ import Button from '../components/commons/atomic/button';
 import ReviewStars from '../components/commons/reviewStars';
 import OwnershipHistory from '../components/ownershipHistory';
 import { productsList } from '../components/Products';
+import { X } from 'phosphor-react'
+
 
 function ProductDetail() {
     const user = useContext(UserContext);
@@ -70,7 +75,7 @@ function ProductDetail() {
                         />
                     </Box>
                     <Box>
-                        <Heading>{label}</Heading>
+                        <Heading size={"lg"}>{label}</Heading>
                         <Text>By {postedBy}</Text>
                         <ReviewStars className={'mt-2'} stars={stars} />
                         <div className='mt-2'>Rs. {price}</div>
@@ -84,13 +89,132 @@ function ProductDetail() {
                         </div>
                     </Box>
                 </div>
-                <OwnershipHistory />
-                {bids.length > 0 && <BidList bids={bids} />}
+                {user && <OwnershipHistory />}
+                {bids.length > 0 && <BidList className="mb-4" bids={bids} />}
+                <Comments product={productId} />
             </> : <Navigate to="/" />
     )
 }
 
-function BidList({ bids }) {
+const commentsList = [
+    {
+        id: 1,
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum convallis fringilla aliquam. ",
+        postedBy: {
+            id: 1,
+            name: "Mao Ze"
+        },
+        replies: []
+    },
+    {
+        id: 2,
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum convallis fringilla aliquam. ",
+        postedBy: {
+            id: 2,
+            name: "Deng Xi"
+        },
+        // replies: [
+        //     {
+        //         id: 4,
+        //         text: "K arey muji",
+        //         postedBy: {
+        //             id: 100,
+        //             name: "Jimmy"
+        //         }
+        //     },
+        //     {
+        //         id: 6,
+        //         text: "Ta jaha xas tei bata uthauxu",
+        //         postedBy: {
+        //             id: 69,
+        //             name: "Prem Ale"
+        //         }
+        //     }
+        // ]
+    },
+    {
+        id: 3,
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum convallis fringilla aliquam. ",
+        postedBy: {
+            id: 4,
+            name: "Hu Lu"
+        },
+        replies: []
+    },
+]
+
+
+function Comments({ productId }) {
+    const [comments, setComments] = useState([]);
+
+    const { onClose, onOpen, isOpen } = useDisclosure();
+
+    const [postComment, setPostComment] = useState("");
+
+    useEffect(() => {
+        setComments(commentsList);
+        // Later we'll fetch and display
+    }, []);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(postComment);
+    }
+
+    return (
+        <>
+            <Heading className='mb-2' size={"lg"}>Comments</Heading>
+            {comments.map(({ id, text, postedBy, replies }) => (
+                <div className='my-3' key={id}>
+                    <div className='mt-3'>
+                        <Text fontWeight={"extrabold"}>{postedBy.name}</Text>
+                        <Text>{text}</Text>
+                    </div>
+                    {/* {replies.map(({ id, text: replyText, postedBy }) => (
+                        <div key={id} className='ml-7 my-3'>
+                            <Text fontWeight={"semibold"}>{postedBy.name}</Text>
+                            <Text>{replyText}</Text>
+                        </div>
+                    ))} */}
+                </div>
+            ))}
+            <Button onClick={onOpen} leftIcon={<ChatText />}>Comment</Button>
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <form onSubmit={handleSubmit} >
+                        <ModalHeader>Post a Comment</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <FormControl>
+                                <FormLabel htmlFor='comment'>Comment</FormLabel>
+                                <InputGroup>
+                                    <Input
+                                        value={postComment}
+                                        onChange={({ target: { value } }) => setPostComment(value)}
+                                        id='comment' />
+                                    <InputRightAddon
+                                        bg={'brandGray.200'}
+                                        onClick={() => setPostComment("")}
+                                        className='cursor-pointer'>
+                                        <Icon as={X} color={"brandGray.100"} />
+                                    </InputRightAddon>
+                                </InputGroup>
+                                <FormHelperText>Maximum 255 Characters</FormHelperText>
+                            </FormControl>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button type="submit" filled>Post</Button>
+                        </ModalFooter>
+                    </form>
+                </ModalContent>
+            </Modal>
+        </>
+    );
+}
+
+
+function BidList({ bids, className }) {
     const { isOpen: isBidDetailOpen, onOpen: onBidDetailOpen, onClose: onBidDetailClose } = useDisclosure();
 
     const [currentBid, setCurrentBid] = useState(bids[0]);
@@ -99,8 +223,8 @@ function BidList({ bids }) {
         console.log('approved')
     }
     return (
-        <>
-            <Heading className='mb-2'>Placed Bids</Heading>
+        <div className={className}>
+            <Heading size={"lg"} className='mb-2'>Placed Bids</Heading>
             <Table variant={"striped"} size='sm'>
                 <Thead>
                     <Tr>
@@ -137,7 +261,7 @@ function BidList({ bids }) {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-        </>
+        </div>
     );
 }
 
