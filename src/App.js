@@ -4,6 +4,7 @@ import BottomNavBar from "./components/bottomNavBar";
 import TopNavBar from "./components/topNavBar";
 import AboutUs from "./pages/AboutUs";
 import AddProduct from "./pages/addProduct";
+import BiddedProducts from "./pages/biddedProducts";
 import Home from "./pages/Home";
 import MyProducts from "./pages/myProducts";
 import NotFound from "./pages/notFound";
@@ -21,7 +22,7 @@ function App() {
       <UserContext.Provider value={user}>
         <BrowserRouter>
           <TopNavBar setUser={setUser} />
-          <div className="md:px-8 px-1 mt-7 mb-10">
+          <div className="md:px-8 px-2 mt-7 mb-10">
             <Routes>
               <Route path="about-us" exact element={<AboutUs />} />
               <Route path="privacy-policy" exact element={<PrivacyPolicy />} />
@@ -29,6 +30,7 @@ function App() {
               <Route path="products" element={<Outlet />} >
                 <Route path=":id" element={<ProductDetail />} />
                 <Route path="mine" element={<MyProducts />} />
+                <Route path="my-bids" element={<BiddedProducts />} />
                 <Route path="add" element={<AddProduct />} />
               </Route>
 

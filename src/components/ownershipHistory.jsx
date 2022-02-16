@@ -12,7 +12,7 @@ import {
 function OwnershipHistory() {
     return (
         <div className='mb-7'>
-            <Heading className='mb-3'>Ownership History</Heading>
+            <Heading size={"lg"} className='mb-3'>Ownership History</Heading>
             <Table size={'sm'} variant="striped">
                 <Thead>
                     <Tr>
