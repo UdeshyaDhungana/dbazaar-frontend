@@ -6,7 +6,6 @@ import React from 'react';
 import ProductCard from './productCard';
 
 function ProductsListing({ products }) {
-
     return (
         <Flex
             direction="row"

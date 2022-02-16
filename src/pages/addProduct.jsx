@@ -15,11 +15,10 @@ import Button from '../components/commons/atomic/button';
 import { getCategories } from '../services/categoryService';
 
 function ProductAddForm() {
-    const [categories, setCategories] = useState([]);
+    const [collections, setCollections] = useState([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [unit_price, setUnit_price] = useState(1);
-    const [collection, setCollection] = useState("");
 
     const toast = useToast();
 
@@ -27,7 +26,7 @@ function ProductAddForm() {
         // query collections and get them
         getCategories()
         .then(({ data }) => {
-            setCategories(data);
+            setCollections(data);
             console.log(data[0]);
         }).catch(error => {
             toast({
@@ -87,7 +86,7 @@ function ProductAddForm() {
                 <FormControl className='mb-5'>
                     <FormLabel htmlFor='product-category'>Category</FormLabel>
                     <Select>
-                        {categories.map(({ title, id }) => (
+                        {collections.map(({ title, id }) => (
                             <option key={id} value={id}>{title}</option>
                         ))}
                     </Select>
