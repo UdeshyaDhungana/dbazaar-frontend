@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Filters from './filters';
 import ProductsListing from './productsListing';
+import { getProducts } from '../../services/productService';
+import { useToast } from '@chakra-ui/react';
 
 export const productsList = [
     {
@@ -162,11 +164,22 @@ export const productsList = [
 
 function Products() {
     const [products, setProducts] = useState([]);
+    const toast = useToast();
 
     useEffect(() => {
-        // to be replaced with api later
-        setProducts(productsList);
-    }, [])
+        getProducts()
+            .then(({ data: {results} }) => {
+                setProducts(results);
+            }).catch(_ => {
+                toast({
+                    title: "Error",
+                    description: "Error occured while fetching categories",
+                    duration: 4000,
+                    status: "error",
+                    isClosable: false,
+                })
+            })
+    }, [toast])
 
     return (
         <div>

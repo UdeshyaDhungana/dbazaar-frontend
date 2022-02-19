@@ -10,10 +10,10 @@ import {
 } from '@chakra-ui/react'
 
 import { Link } from 'react-router-dom';
+import { getImageUrl } from '../../../services/productService';
 
-const IMAGE = 'https://picsum.photos/id/237/200/300'
 
-function ProductCard({ product: { id, label, price, description, category, posted_by } }) {
+function ProductCard({ product: { id, title, collection, image, unit_price  } }) {
     return (
         <Center py={12}>
             <Link to={`/products/${id}`}>
@@ -41,7 +41,7 @@ function ProductCard({ product: { id, label, price, description, category, poste
                             pos: 'absolute',
                             top: 5,
                             left: 0,
-                            backgroundImage: `url(${IMAGE})`,
+                            backgroundImage: `url(${getImageUrl(image)})`,
                             filter: 'blur(15px)',
                             zIndex: -1,
                         }}
@@ -55,19 +55,19 @@ function ProductCard({ product: { id, label, price, description, category, poste
                             height={230}
                             width={282}
                             objectFit={'cover'}
-                            src={IMAGE}
+                            src={getImageUrl(image)}
                         />
                     </Box>
                     <Stack pt={10} align={'center'}>
                         <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
-                            {category.label}
+                            {collection.title}
                         </Text>
                         <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
-                            {label}
+                            {title}
                         </Heading>
                         <Stack direction={'row'} align={'center'}>
                             <Text fontWeight={800} fontSize={'xl'}>
-                                Rs. {price}
+                                Rs. {unit_price}
                             </Text>
                         </Stack>
                     </Stack>
