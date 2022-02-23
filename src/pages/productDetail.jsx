@@ -17,13 +17,12 @@ import {
 } from '@chakra-ui/react';
 import { ChatText, X } from 'phosphor-react';
 import React, { useContext, useEffect, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { UserContext } from '../App';
 import Button from '../components/commons/atomic/button';
 import OwnershipHistory from '../components/ownershipHistory';
 import ProductImage from '../components/Products/productDetails/index';
 import { getSingleProuct } from '../services/productService';
-
 
 function ProductDetail() {
     const user = useContext(UserContext);
@@ -47,13 +46,12 @@ function ProductDetail() {
                 setLabel(title);
                 setPrice(unit_price);
                 setDescription(description);
-                setPostedBy(firstname + lastname);
+                setPostedBy(`${firstname} ${lastname}`);
                 setBids([])
                 setImageUrl(image)
-            }).catch(_ => {
+            }).catch(ex => {
                 window.location.href = '/not-found'
             })
-            .catch(err => console.log(err))
     }, [id, toast]);
 
     const handlePlaceBid = (bidPrice, description) => {
@@ -63,28 +61,27 @@ function ProductDetail() {
     }
 
     return (
-        !isNaN(id) && Number.isInteger(Number(id)) && id > 0 ?
-            <>
-                <div className="grid my-10 md:grid-cols-2">
-                    <ProductImage className="justify-self-center" title={label} imageUrl={imageUrl} />
-                    <Box>
-                        <Heading size={"lg"}>{label}</Heading>
-                        <Text>By {postedBy}</Text>
-                        <div className='mt-2'>Rs. {price}</div>
-                        <Button disabled={!user} className="mt-3" onClick={onBidFormOpen}>Place Bid</Button>
-                        <ProductBidForm
-                            isOpen={isBidFormOpen}
-                            handlePlaceBid={handlePlaceBid}
-                            onClose={onBidFormClose} />
-                        <div className='mt-3'>
-                            {description}
-                        </div>
-                    </Box>
-                </div>
-                {user && <OwnershipHistory />}
-                {bids.length > 0 && <BidList className="mb-4" bids={bids} />}
-                <Comments product={productId} />
-            </> : <Navigate to="/" />
+        <>
+            <div className="grid my-10 md:grid-cols-2">
+                <ProductImage className="justify-self-center" title={label} imageUrl={imageUrl} />
+                <Box>
+                    <Heading size={"lg"}>{label}</Heading>
+                    <Text>By {postedBy}</Text>
+                    <div className='mt-2'>Rs. {price}</div>
+                    <Button disabled={!user} className="mt-3" onClick={onBidFormOpen}>Place Bid</Button>
+                    <ProductBidForm
+                        isOpen={isBidFormOpen}
+                        handlePlaceBid={handlePlaceBid}
+                        onClose={onBidFormClose} />
+                    <div className='mt-3'>
+                        {description}
+                    </div>
+                </Box>
+            </div>
+            {user && <OwnershipHistory />}
+            {bids.length > 0 && <BidList className="mb-4" bids={bids} />}
+            <Comments product={productId} />
+        </>
     )
 }
 
@@ -105,24 +102,6 @@ const commentsList = [
             id: 2,
             name: "Deng Xi"
         },
-        // replies: [
-        //     {
-        //         id: 4,
-        //         text: "K arey muji",
-        //         postedBy: {
-        //             id: 100,
-        //             name: "Jimmy"
-        //         }
-        //     },
-        //     {
-        //         id: 6,
-        //         text: "Ta jaha xas tei bata uthauxu",
-        //         postedBy: {
-        //             id: 69,
-        //             name: "Prem Ale"
-        //         }
-        //     }
-        // ]
     },
     {
         id: 3,
