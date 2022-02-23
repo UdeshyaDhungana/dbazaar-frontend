@@ -7,5 +7,9 @@ export async function getProducts(){
 }
 
 export function getImageUrl(source){
-    return baseUrl + source
+    return baseUrl + source;
+}
+
+export function getSingleProuct(id){
+    return http.get(productUrl + `/${id}`);
 }

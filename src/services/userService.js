@@ -16,8 +16,9 @@ export function removeToken(){
     localStorage.removeItem('accessToken');
 }
 
-export function saveToken({ access }){
+export function saveToken({ access, refresh }){
     localStorage.setItem('accessToken', access);
+    localStorage.setItem('refreshToken', refresh);
 }
 
 export function getCurrentUser(){

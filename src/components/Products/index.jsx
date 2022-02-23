@@ -165,6 +165,12 @@ export const productsList = [
 function Products() {
     const [products, setProducts] = useState([]);
     const toast = useToast();
+    // const [filters, setFilters] = useState({});
+
+    // const applyFilter = (filters) => {
+    //     setFilters(filters);
+    //     console.log(filters);
+    // }
 
     useEffect(() => {
         getProducts()
@@ -183,7 +189,7 @@ function Products() {
 
     return (
         <div>
-            <Filters />
+            {/* <Filters applyFilter={applyFilter} /> */}
             <ProductsListing
                 products={products}
             />
