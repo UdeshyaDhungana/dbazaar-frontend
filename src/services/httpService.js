@@ -1,22 +1,46 @@
 import axios from "axios";
+import { refreshToken, saveToken } from "./userService";
 
 const baseUrl = process.env.REACT_APP_HOST;
 
-// axios.interceptors.response.use(null, error => {
-//   const expectedError =
-//     error.response &&
-//     error.response.status >= 400 &&
-//     error.response.status < 500;
+axios.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      setJwt(token);
+    }
+    return config;
+  },
+  error => {
+    Promise.reject(error)
+  });
 
-//   if (!expectedError) {
-//       console.log("The unexpected error is: ", error);
-//   }
+axios.interceptors.response.use((response) => {
+  return response
+},
+  function (error) {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      return refreshToken()
+        .then(res => {
+          if (res.status === 201) {
+            // 1) put token to LocalStorage
+            saveToken(res.data)
 
-//   return Promise.reject(error);
-// });
+            // 2) Change Authorization header
+            setJwt(localStorage.getItem('accessToken'));
+
+            // 3) return originalRequest object with Axios.
+            return axios(originalRequest);
+          }
+        })
+    }
+  }
+)
 
 function setJwt(jwt) {
-  axios.defaults.headers.common["x-auth-token"] = jwt;
+  axios.defaults.headers.common["Authorization"] = `JWT ${jwt}`;
 }
 
 const http = {

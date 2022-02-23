@@ -3,37 +3,31 @@ import {
     FormControl,
     FormHelperText,
     FormLabel,
-    Heading,
-    Image, Modal,
+    Heading, Icon, Input, InputGroup, InputRightAddon, Modal,
     ModalBody,
     ModalCloseButton,
     ModalContent,
-    ModalFooter,
-    Input,
-    Icon,
-    ModalHeader,
+    ModalFooter, ModalHeader,
     ModalOverlay,
     NumberDecrementStepper,
     NumberIncrementStepper,
     NumberInput,
     NumberInputField,
-    NumberInputStepper, Table, Tbody, Td, Text, Th,
-    Textarea, Thead, Tr, useDisclosure, InputRightAddon, InputGroup
+    NumberInputStepper, Table, Tbody, Td, Text, Textarea, Th, Thead, Tr, useDisclosure, useToast
 } from '@chakra-ui/react';
-import { ChatText } from 'phosphor-react';
+import { ChatText, X } from 'phosphor-react';
 import React, { useContext, useEffect, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { UserContext } from '../App';
 import Button from '../components/commons/atomic/button';
-import ReviewStars from '../components/commons/reviewStars';
 import OwnershipHistory from '../components/ownershipHistory';
-import { productsList } from '../components/Products';
-import { X } from 'phosphor-react'
-
+import ProductImage from '../components/Products/productDetails/index';
+import { getSingleProuct } from '../services/productService';
 
 function ProductDetail() {
     const user = useContext(UserContext);
     const { id } = useParams();
+    const toast = useToast();
 
     const { isOpen: isBidFormOpen, onOpen: onBidFormOpen, onClose: onBidFormClose } = useDisclosure();
 
@@ -41,22 +35,24 @@ function ProductDetail() {
     const [label, setLabel] = useState('');
     const [price, setPrice] = useState();
     const [description, setDescription] = useState('');
-    const [stars, setStars] = useState();
     const [postedBy, setPostedBy] = useState('');
     const [bids, setBids] = useState([]);
+    const [imageUrl, setImageUrl] = useState('');
 
     useEffect(() => {
-        setTimeout(() => {
-            const { id: productId, label, price, description, stars, posted_by, bids } = productsList[Number(id) - 1];
-            setProductId(productId);
-            setLabel(label);
-            setPrice(price);
-            setDescription(description);
-            setStars(stars);
-            setPostedBy(posted_by['name'])
-            setBids(bids)
-        }, 500);
-    }, [id]);
+        getSingleProuct(id)
+            .then(({ data: { id, title, image, unit_price, description, owner: { firstname, lastname } } }) => {
+                setProductId(id);
+                setLabel(title);
+                setPrice(unit_price);
+                setDescription(description);
+                setPostedBy(`${firstname} ${lastname}`);
+                setBids([])
+                setImageUrl(image)
+            }).catch(ex => {
+                window.location.href = '/not-found'
+            })
+    }, [id, toast]);
 
     const handlePlaceBid = (bidPrice, description) => {
         console.log(bidPrice)
@@ -65,34 +61,27 @@ function ProductDetail() {
     }
 
     return (
-        !isNaN(id) && Number.isInteger(Number(id)) && id > 0 ?
-            <>
-                <div className="grid my-10 md:grid-cols-2">
-                    <Box className='justify-self-center'>
-                        <Image
-                            src={'https://picsum.photos/seed/picsum/200/300'}
-                            className=""
-                        />
-                    </Box>
-                    <Box>
-                        <Heading size={"lg"}>{label}</Heading>
-                        <Text>By {postedBy}</Text>
-                        <ReviewStars className={'mt-2'} stars={stars} />
-                        <div className='mt-2'>Rs. {price}</div>
-                        <Button disabled={!user} className="mt-3" onClick={onBidFormOpen}>Place Bid</Button>
-                        <ProductBidForm
-                            isOpen={isBidFormOpen}
-                            handlePlaceBid={handlePlaceBid}
-                            onClose={onBidFormClose} />
-                        <div className='mt-3'>
-                            {description}
-                        </div>
-                    </Box>
-                </div>
-                {user && <OwnershipHistory />}
-                {bids.length > 0 && <BidList className="mb-4" bids={bids} />}
-                <Comments product={productId} />
-            </> : <Navigate to="/" />
+        <>
+            <div className="grid my-10 md:grid-cols-2">
+                <ProductImage className="justify-self-center" title={label} imageUrl={imageUrl} />
+                <Box>
+                    <Heading size={"lg"}>{label}</Heading>
+                    <Text>By {postedBy}</Text>
+                    <div className='mt-2'>Rs. {price}</div>
+                    <Button disabled={!user} className="mt-3" onClick={onBidFormOpen}>Place Bid</Button>
+                    <ProductBidForm
+                        isOpen={isBidFormOpen}
+                        handlePlaceBid={handlePlaceBid}
+                        onClose={onBidFormClose} />
+                    <div className='mt-3'>
+                        {description}
+                    </div>
+                </Box>
+            </div>
+            {user && <OwnershipHistory />}
+            {bids.length > 0 && <BidList className="mb-4" bids={bids} />}
+            <Comments product={productId} />
+        </>
     )
 }
 
@@ -113,24 +102,6 @@ const commentsList = [
             id: 2,
             name: "Deng Xi"
         },
-        // replies: [
-        //     {
-        //         id: 4,
-        //         text: "K arey muji",
-        //         postedBy: {
-        //             id: 100,
-        //             name: "Jimmy"
-        //         }
-        //     },
-        //     {
-        //         id: 6,
-        //         text: "Ta jaha xas tei bata uthauxu",
-        //         postedBy: {
-        //             id: 69,
-        //             name: "Prem Ale"
-        //         }
-        //     }
-        // ]
     },
     {
         id: 3,

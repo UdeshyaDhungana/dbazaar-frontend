@@ -2,13 +2,13 @@ import { createContext, useState } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import BottomNavBar from "./components/bottomNavBar";
 import TopNavBar from "./components/topNavBar";
-import AboutUs from "./pages/AboutUs";
+import AboutUs from "./pages/aboutUs";
 import AddProduct from "./pages/addProduct";
 import BiddedProducts from "./pages/biddedProducts";
-import Home from "./pages/Home";
+import Home from "./pages/home";
 import MyProducts from "./pages/myProducts";
 import NotFound from "./pages/notFound";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
+import PrivacyPolicy from "./pages/privacyPolicy";
 import ProductDetail from "./pages/productDetail";
 import { getCurrentUser } from "./services/userService";
 
