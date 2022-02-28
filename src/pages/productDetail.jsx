@@ -20,9 +20,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { UserContext } from '../App';
 import Button from '../components/commons/atomic/button';
+import unknownErrorToast from '../components/commons/atomic/unknownErrorToast';
 import OwnershipHistory from '../components/ownershipHistory';
 import ProductImage from '../components/Products/productDetails/index';
-import { getSingleProuct } from '../services/productService';
+import { getProductComments, getSingleProuct, postCommentOnProduct } from '../services/productService';
 
 function ProductDetail() {
     const user = useContext(UserContext);
@@ -50,8 +51,7 @@ function ProductDetail() {
                 setBids([])
                 setImageUrl(image)
             }).catch(ex => {
-                console.log(ex);
-                // window.location.href = '/not-found'
+                window.location.href = '/not-found'
             })
     }, [id, toast]);
 
@@ -79,75 +79,56 @@ function ProductDetail() {
                     </div>
                 </Box>
             </div>
+            {/* Only Authenticated Users can See ownership history */}
             {user && <OwnershipHistory />}
-            {bids.length > 0 && <BidList className="mb-4" bids={bids} />}
-            <Comments product={productId} />
+            {/* <BidList className="mb-4" bids={bids} /> */}
+            <Comments toast={toast} productId={productId} />
         </>
     )
 }
 
-const commentsList = [
-    {
-        id: 1,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum convallis fringilla aliquam. ",
-        postedBy: {
-            id: 1,
-            name: "Mao Ze"
-        },
-        replies: []
-    },
-    {
-        id: 2,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum convallis fringilla aliquam. ",
-        postedBy: {
-            id: 2,
-            name: "Deng Xi"
-        },
-    },
-    {
-        id: 3,
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum convallis fringilla aliquam. ",
-        postedBy: {
-            id: 4,
-            name: "Hu Lu"
-        },
-        replies: []
-    },
-]
 
-
-function Comments({ productId }) {
+function Comments({ productId, toast }) {
     const [comments, setComments] = useState([]);
+    const [postComment, setPostComment] = useState("");
+    const [reload, setReload] = useState(false);
 
     const { onClose, onOpen, isOpen } = useDisclosure();
 
-    const [postComment, setPostComment] = useState("");
-
     useEffect(() => {
-        setComments(commentsList);
-        // Later we'll fetch and display
-    }, []);
+        getProductComments(productId)
+            .then(({ data }) => {
+                setComments(data);
+            })
+            .catch(_ => {
+                unknownErrorToast(toast)
+            })
+    }, [productId, toast, reload]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(postComment);
+        postCommentOnProduct(productId, postComment)
+        .then(({ data }) => {
+            setReload(!reload);
+        })
+        .catch(_ => {
+            unknownErrorToast(toast);
+        })
+        .finally(_ => {
+            onClose();
+        })
     }
 
     return (
         <>
-            <Heading className='mb-2' size={"lg"}>Comments</Heading>
-            {comments.map(({ id, text, postedBy, replies }) => (
+            {comments.length > 0 && <Heading className='mb-2' size={"lg"}>Comments</Heading>}
+            {comments.map(({ id, date, description, commentor: { firstname, lastname } }) => (
                 <div className='my-3' key={id}>
                     <div className='mt-3'>
-                        <Text fontWeight={"extrabold"}>{postedBy.name}</Text>
-                        <Text>{text}</Text>
+                        <Text fontWeight={"extrabold"}>{`${firstname} ${lastname}`}</Text>
+                        <Text fontSize={"xs"}>{date}</Text>
+                        <Text>{description}</Text>
                     </div>
-                    {/* {replies.map(({ id, text: replyText, postedBy }) => (
-                        <div key={id} className='ml-7 my-3'>
-                            <Text fontWeight={"semibold"}>{postedBy.name}</Text>
-                            <Text>{replyText}</Text>
-                        </div>
-                    ))} */}
                 </div>
             ))}
             <Button onClick={onOpen} leftIcon={<ChatText />}>Comment</Button>
