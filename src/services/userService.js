@@ -3,7 +3,7 @@ import http, { baseUrl } from './httpService';
 
 const usersApi = baseUrl + '/auth/users/';
 const createJwtApi = baseUrl + '/auth/jwt/create'
-const refreshJwtApi = baseUrl + '/auth/jwt/refresh'
+export const refreshJwtApi = baseUrl + '/auth/jwt/refresh'
 
 export async function register(user){
     return http.post(usersApi, user);
@@ -19,13 +19,35 @@ export async function refreshToken(){
     })
 }
 
-export function removeToken(){
-    localStorage.removeItem('accessToken');
+/* Synchronous */
+
+export function saveAccessToken(accessToken) {
+    accessToken && localStorage.setItem('accessToken', accessToken);
+}
+
+export function saveRefreshToken(refreshToken) {
+    refreshToken && localStorage.setItem('accessToken', refreshToken);
 }
 
 export function saveToken({ access, refresh }){
-    access && localStorage.setItem('accessToken', access);
-    refresh && localStorage.setItem('refreshToken', refresh);
+    saveAccessToken(access);
+    saveRefreshToken(refresh);
+}
+
+export function removeAccessToken(){
+    localStorage.removeItem('accessToken');
+}
+
+export function removeRefreshToken(){
+    localStorage.removeItem('refreshToken');
+}
+
+export function getAccessTokenLocal(){
+    return localStorage.getItem('accessToken');
+}
+
+export function getRefreshTokenLocal(){
+    return localStorage.getItem('refreshToken');
 }
 
 export function getCurrentUser(){
