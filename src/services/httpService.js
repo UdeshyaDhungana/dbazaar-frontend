@@ -1,5 +1,5 @@
 import axios from "axios";
-import { refreshToken, saveToken } from "./userService";
+import { getAccessTokenLocal, getRefreshTokenLocal, refreshJwtApi } from "./userService";
 
 const baseUrl = process.env.REACT_APP_HOST;
 
@@ -13,31 +13,32 @@ axios.interceptors.request.use(
   },
   error => {
     Promise.reject(error)
-  });
+});
 
 axios.interceptors.response.use((response) => {
   return response
-},
-  function (error) {
-    const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      return refreshToken()
-        .then(res => {
-          if (res.status === 201) {
-            // 1) put token to LocalStorage
-            saveToken(res.data)
+}, function (error) {
+  const originalRequest = error.config;
 
-            // 2) Change Authorization header
-            setJwt(localStorage.getItem('accessToken'));
-
-            // 3) return originalRequest object with Axios.
-            return axios(originalRequest);
-          }
-        })
-    }
+  if (error.response.status === 401 && originalRequest.url === refreshJwtApi) {
+      window.location.href = "/";
+      return Promise.reject(error);
   }
-)
+
+  if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const refreshToken = getRefreshTokenLocal()
+      refreshToken()
+          .then(res => {
+              if (res.status === 201) {
+                  
+                  axios.defaults.headers.common['Authorization'] = 'JWT ' + getAccessTokenLocal()
+                  return axios(originalRequest);
+              }
+          })
+  }
+  return Promise.reject(error);
+});
 
 function setJwt(jwt) {
   axios.defaults.headers.common["Authorization"] = `JWT ${jwt}`;

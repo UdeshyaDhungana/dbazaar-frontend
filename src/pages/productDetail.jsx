@@ -50,7 +50,8 @@ function ProductDetail() {
                 setBids([])
                 setImageUrl(image)
             }).catch(ex => {
-                window.location.href = '/not-found'
+                console.log(ex);
+                // window.location.href = '/not-found'
             })
     }, [id, toast]);
 
