@@ -11,7 +11,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../App';
 import logo from '../../logo.png';
-import { removeAccessToken } from '../../services/userService';
+import { removeTokens } from '../../services/userService';
 import Login from './login';
 import Register from './register';
 import SearchBar from './searchBar';
@@ -23,7 +23,7 @@ export default function TopNavBar({ setUser }) {
   const user = useContext(UserContext);
 
   const handleLogout = () => {
-    removeAccessToken();
+    removeTokens();
     window.location.href = "/";
   }
 

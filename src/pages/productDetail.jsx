@@ -3,7 +3,8 @@ import {
     FormControl,
     FormHelperText,
     FormLabel,
-    Heading, Icon, Input, InputGroup, InputRightAddon, Modal,
+    Heading, IconButton, Input, Menu,
+    MenuButton, MenuItem, MenuList, Modal,
     ModalBody,
     ModalCloseButton,
     ModalContent,
@@ -13,9 +14,9 @@ import {
     NumberIncrementStepper,
     NumberInput,
     NumberInputField,
-    NumberInputStepper, Table, Tbody, Td, Text, Textarea, Th, Thead, Tr, useDisclosure, useToast
+    NumberInputStepper, Text, Textarea, useDisclosure, useToast
 } from '@chakra-ui/react';
-import { ChatText, X } from 'phosphor-react';
+import { DotsThreeVertical, Trash } from 'phosphor-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { UserContext } from '../App';
@@ -23,7 +24,8 @@ import Button from '../components/commons/atomic/button';
 import unknownErrorToast from '../components/commons/atomic/unknownErrorToast';
 import OwnershipHistory from '../components/ownershipHistory';
 import ProductImage from '../components/Products/productDetails/index';
-import { getProductComments, getSingleProuct, postCommentOnProduct } from '../services/productService';
+import { deleteCommentOfProduct, getProductComments, getSingleProuct, postCommentOnProduct } from '../services/productService';
+
 
 function ProductDetail() {
     const user = useContext(UserContext);
@@ -82,18 +84,18 @@ function ProductDetail() {
             {/* Only Authenticated Users can See ownership history */}
             {user && <OwnershipHistory />}
             {/* <BidList className="mb-4" bids={bids} /> */}
-            <Comments toast={toast} productId={productId} />
+            <Comments productId={productId} />
         </>
     )
 }
 
 
-function Comments({ productId, toast }) {
+function Comments({ productId }) {
+    const user = useContext(UserContext);
     const [comments, setComments] = useState([]);
     const [postComment, setPostComment] = useState("");
     const [reload, setReload] = useState(false);
-
-    const { onClose, onOpen, isOpen } = useDisclosure();
+    const toast = useToast();
 
     useEffect(() => {
         getProductComments(productId)
@@ -105,118 +107,123 @@ function Comments({ productId, toast }) {
             })
     }, [productId, toast, reload]);
 
-    const handleSubmit = (e) => {
+    const handleSubmitComment = (e) => {
         e.preventDefault();
         postCommentOnProduct(productId, postComment)
-        .then(({ data }) => {
+            .then(({ data }) => {
+                setPostComment("");
+                setReload(!reload);
+            })
+            .catch(_ => {
+                unknownErrorToast(toast);
+            })
+    }
+
+    const deleteComment = (id) => {
+        deleteCommentOfProduct(productId, id)
+        .then(_ => {
             setReload(!reload);
         })
         .catch(_ => {
             unknownErrorToast(toast);
         })
-        .finally(_ => {
-            onClose();
-        })
     }
 
     return (
-        <>
+        <div className='md:w-1/2'>
             {comments.length > 0 && <Heading className='mb-2' size={"lg"}>Comments</Heading>}
-            {comments.map(({ id, date, description, commentor: { firstname, lastname } }) => (
+            <form onSubmit={handleSubmitComment} >
+                <FormControl>
+                    <Heading>
+                        <FormLabel display={"none"} htmlFor='comment'>Comment</FormLabel>
+                    </Heading>
+                    <Input
+                        placeholder={"Add a comment"}
+                        className='mb-2'
+                        value={postComment}
+                        onChange={({ target: { value } }) => setPostComment(value)}
+                        id='comment' />
+                    <Button disabled={!user || (postComment.length < 1 || postComment.length > 255)} type="submit" filled>Post</Button>
+                </FormControl>
+            </form>
+            {comments.map(({ id, description, commentor }) => (
                 <div className='my-3' key={id}>
                     <div className='mt-3'>
-                        <Text fontWeight={"extrabold"}>{`${firstname} ${lastname}`}</Text>
-                        <Text fontSize={"xs"}>{date}</Text>
-                        <Text>{description}</Text>
+                        <Text fontWeight={"extrabold"}>{`${commentor.firstname} ${commentor.lastname}`}</Text>
+                        <div className='grid grid-cols-12'>
+                            <Text className='col-span-10'>{description}</Text>
+                            {user && user.user_id === commentor.id && <Menu>
+                                <MenuButton
+                                    as={IconButton}
+                                    aria-label='Options'
+                                    icon={<DotsThreeVertical />}
+                                    variant='outline'
+                                />
+                                <MenuList>
+                                    <MenuItem onClick={() => deleteComment(id)} icon={<Trash />}>
+                                        Delete
+                                    </MenuItem>
+                                </MenuList>
+                            </Menu>}
+                        </div>
                     </div>
                 </div>
             ))}
-            <Button onClick={onOpen} leftIcon={<ChatText />}>Comment</Button>
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <form onSubmit={handleSubmit} >
-                        <ModalHeader>Post a Comment</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>
-                            <FormControl>
-                                <FormLabel htmlFor='comment'>Comment</FormLabel>
-                                <InputGroup>
-                                    <Input
-                                        value={postComment}
-                                        onChange={({ target: { value } }) => setPostComment(value)}
-                                        id='comment' />
-                                    <InputRightAddon
-                                        bg={'brandGray.200'}
-                                        onClick={() => setPostComment("")}
-                                        className='cursor-pointer'>
-                                        <Icon as={X} color={"brandGray.100"} />
-                                    </InputRightAddon>
-                                </InputGroup>
-                                <FormHelperText>Maximum 255 Characters</FormHelperText>
-                            </FormControl>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button type="submit" filled>Post</Button>
-                        </ModalFooter>
-                    </form>
-                </ModalContent>
-            </Modal>
-        </>
-    );
-}
-
-
-function BidList({ bids, className }) {
-    const { isOpen: isBidDetailOpen, onOpen: onBidDetailOpen, onClose: onBidDetailClose } = useDisclosure();
-
-    const [currentBid, setCurrentBid] = useState(bids[0]);
-
-    const handleBidApproval = () => {
-        console.log('approved')
-    }
-    return (
-        <div className={className}>
-            <Heading size={"lg"} className='mb-2'>Placed Bids</Heading>
-            <Table variant={"striped"} size='sm'>
-                <Thead>
-                    <Tr>
-                        <Th>Posted By</Th>
-                        <Th isNumeric>Bid Price</Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
-                    {bids.map((bid) => (
-                        <Tr key={bid.id} onClick={() => {
-                            setCurrentBid(bid);
-                            onBidDetailOpen();
-                        }} className='cursor-pointer'>
-                            <Td>{bid.posted_by.name}</Td>
-                            <Td isNumeric>{bid.price}</Td>
-                        </Tr>
-                    ))}
-                </Tbody>
-            </Table>
-            <Modal isOpen={isBidDetailOpen} onClose={onBidDetailClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>{currentBid.posted_by.name}</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <Heading className='mb-4' size={'sm'}>Rs. {currentBid.price}</Heading>
-                        {currentBid.description}
-                    </ModalBody>
-
-                    <ModalFooter>
-                        <Button mr={3} onClick={handleBidApproval}>
-                            Approve Bid
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
         </div>
     );
 }
+
+
+// function BidList({ bids, className }) {
+//     const { isOpen: isBidDetailOpen, onOpen: onBidDetailOpen, onClose: onBidDetailClose } = useDisclosure();
+
+//     const [currentBid, setCurrentBid] = useState(bids[0]);
+
+//     const handleBidApproval = () => {
+//         console.log('approved')
+//     }
+//     return (
+//         <div className={className}>
+//             <Heading size={"lg"} className='mb-2'>Placed Bids</Heading>
+//             <Table variant={"striped"} size='sm'>
+//                 <Thead>
+//                     <Tr>
+//                         <Th>Posted By</Th>
+//                         <Th isNumeric>Bid Price</Th>
+//                     </Tr>
+//                 </Thead>
+//                 <Tbody>
+//                     {bids.map((bid) => (
+//                         <Tr key={bid.id} onClick={() => {
+//                             setCurrentBid(bid);
+//                             onBidDetailOpen();
+//                         }} className='cursor-pointer'>
+//                             <Td>{bid.posted_by.name}</Td>
+//                             <Td isNumeric>{bid.price}</Td>
+//                         </Tr>
+//                     ))}
+//                 </Tbody>
+//             </Table>
+//             <Modal isOpen={isBidDetailOpen} onClose={onBidDetailClose}>
+//                 <ModalOverlay />
+//                 <ModalContent>
+//                     <ModalHeader>{currentBid.posted_by.name}</ModalHeader>
+//                     <ModalCloseButton />
+//                     <ModalBody>
+//                         <Heading className='mb-4' size={'sm'}>Rs. {currentBid.price}</Heading>
+//                         {currentBid.description}
+//                     </ModalBody>
+
+//                     <ModalFooter>
+//                         <Button mr={3} onClick={handleBidApproval}>
+//                             Approve Bid
+//                         </Button>
+//                     </ModalFooter>
+//                 </ModalContent>
+//             </Modal>
+//         </div>
+//     );
+// }
 
 const ProductBidForm = ({ isOpen, onClose, handlePlaceBid }) => {
     const [bidPrice, setBidPrice] = useState(0);

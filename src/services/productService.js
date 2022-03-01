@@ -38,3 +38,7 @@ export async function postCommentOnProduct(id, description) {
         description: description
     });
 }
+
+export async function deleteCommentOfProduct(productId, commentId){
+    return http.delete(getCommentOnProductUrl(productId) + commentId);
+}

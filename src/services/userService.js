@@ -26,7 +26,7 @@ export function saveAccessToken(accessToken) {
 }
 
 export function saveRefreshToken(refreshToken) {
-    refreshToken && localStorage.setItem('accessToken', refreshToken);
+    refreshToken && localStorage.setItem('refreshToken', refreshToken);
 }
 
 export function saveToken({ access, refresh }){
@@ -40,6 +40,11 @@ export function removeAccessToken(){
 
 export function removeRefreshToken(){
     localStorage.removeItem('refreshToken');
+}
+
+export function removeTokens() {
+    removeAccessToken();
+    removeRefreshToken();
 }
 
 export function getAccessTokenLocal(){
