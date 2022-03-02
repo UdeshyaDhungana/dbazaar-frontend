@@ -3,7 +3,11 @@ import http, { baseUrl } from "./httpService";
 const productUrl = baseUrl + '/store/products/'
 
 function getCommentOnProductUrl(id) {
-    return productUrl + `${id}/comments/`
+    return productUrl + `${id}/comments/`;
+}
+
+function getBidOnProductUrl(id) {
+    return productUrl + `${id}/bids/`;
 }
 
 /* Synchronous */
@@ -41,4 +45,16 @@ export async function postCommentOnProduct(id, description) {
 
 export async function deleteCommentOfProduct(productId, commentId){
     return http.delete(getCommentOnProductUrl(productId) + commentId);
+}
+
+export async function getProductBids(id) {
+    return http.get(getBidOnProductUrl(id));
+}
+
+export async function postBidOnProduct(id, bid) {
+    return http.post(getBidOnProductUrl(id), bid);
+}
+
+export async function deleteBidOfProduct(productId, commentId){
+    // return http.delete(getCommentOnProductUrl(productId) + commentId);
 }
