@@ -7,12 +7,13 @@ import { Button as ChakraButton } from "@chakra-ui/react";
 function Button({
     children,
     shadow,
+    danger,
     filled,
     ...props }) {
     return (
         <ChakraButton
-            colorScheme={"blue"}
-            variant={filled?'solid' : 'outline'}
+            colorScheme={danger? "red": "blue"}
+            variant={danger? 'solid': filled? 'solid' : 'outline'}
             boxShadow={shadow ? 'md' : 'inherit'}
             borderColor={'brandBlue.500'}
             {...props}
