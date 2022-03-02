@@ -6,6 +6,7 @@ import {
     Tr, useDisclosure, useToast
 } from '@chakra-ui/react';
 import moment from 'moment';
+import { SmileySad } from 'phosphor-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../../App';
 import { getProductBids, postBidOnProduct } from '../../../services/productService';
@@ -69,28 +70,32 @@ function Bids({ productId, className, isOwner }) {
 
     return (
         <div className={className}>
-            {bids.length > 0 && <Heading size={"lg"} className='mb-2'>Placed Bids</Heading>}
-            <Table>
-                <Thead>
-                    <Tr>
-                        <Th>Posted By</Th>
-                        <Th>Bid Price</Th>
-                        <Th></Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
-                    {bids.map((bid) => (
-                        <Tr key={bid.id}>
-                            <Td>{bid.customer.firstname + ' ' + bid.customer.lastname}</Td>
-                            <Td>Rs. {bid.price}</Td>
-                            <Td isNumeric><Button onClick={() => {
-                                setOpenedBid(bid)
-                                onBidDetailOpen();
-                            }}>View Details</Button></Td>
-                        </Tr>
-                    ))}
-                </Tbody>
-            </Table>
+            <Heading size={"lg"} className='mb-6'>Placed Bids</Heading>
+            {bids.length > 0 ?
+                    <Table>
+                        <Thead>
+                            <Tr>
+                                <Th>Posted By</Th>
+                                <Th>Bid Price</Th>
+                                <Th></Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {bids.map((bid) => (
+                                <Tr key={bid.id}>
+                                    <Td>{bid.customer.firstname + ' ' + bid.customer.lastname}</Td>
+                                    <Td>Rs. {bid.price}</Td>
+                                    <Td isNumeric><Button onClick={() => {
+                                        setOpenedBid(bid)
+                                        onBidDetailOpen();
+                                    }}>View Details</Button></Td>
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                    :
+                <NoBids />
+            }
             {/* Modal for viewing bid details */}
             {Object.keys(openedBid).length > 0 && <Modal size={"xl"} isOpen={isBidDetailOpen} onClose={onBidDetailClose}>
                 <ModalOverlay />
@@ -111,10 +116,9 @@ function Bids({ productId, className, isOwner }) {
             </Modal>}
 
             {/* Component for adding new bid */}
-            <ProductBidForm
+            {!isOwner && <ProductBidForm
                 user={user}
-                isOwner={isOwner}
-                handlePlaceBid={handleBidSubmit} />
+                handlePlaceBid={handleBidSubmit} />}
         </div>
     );
 }
@@ -205,5 +209,17 @@ const ProductBidForm = ({ handlePlaceBid }) => {
         </>
     )
 }
+
+function NoBids() {
+    return (
+        <div className='grid justify-center'>
+            <div className='justify-self-center'>
+                <SmileySad display={'block'} weight={"thin"} className='' size={64} />
+            </div>
+            <div className='align-center' >No bids have been placed yet!</div>
+        </div>
+    );
+}
+
 
 export default Bids;

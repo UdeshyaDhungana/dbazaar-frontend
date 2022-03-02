@@ -38,7 +38,7 @@ axios.interceptors.request.use(
 // });
 
 function setJwt(jwt) {
-  axios.defaults.headers.common["Authorization"] = `JWT ${jwt}`;
+  axios.defaults.headers["Authorization"] = `JWT ${jwt}`;
 }
 
 const http = {

@@ -51,7 +51,7 @@ function Comments({ productId }) {
 
     return (
         <div>
-            {comments.length > 0 && <Heading className='mb-2' size={"lg"}>Comments</Heading>}
+            <Heading className='mb-6' size={"lg"}>Comments</Heading>
             <form onSubmit={handleSubmitComment} >
                 <FormControl>
                     <Heading>
@@ -63,7 +63,7 @@ function Comments({ productId }) {
                         value={postComment}
                         onChange={({ target: { value } }) => setPostComment(value)}
                         id='comment' />
-                    <Button disabled={!user || (postComment.length < 1 || postComment.length > 255)} type="submit" filled>Post</Button>
+                    <Button disabled={!user || (postComment.length < 1 || postComment.length > 255)} type="submit" filled>Add</Button>
                 </FormControl>
             </form>
             {comments.map(({ id, description, commentor }) => (

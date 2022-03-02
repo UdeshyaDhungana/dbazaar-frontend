@@ -53,7 +53,7 @@ function ProductDetail() {
             </div>
             {/* Only Authenticated Users can See ownership history */}
             {/* {user && <OwnershipHistory />} */}
-            <div className='grid grid-cols-2 gap-4'>
+            <div className={`grid ${user?'grid-cols-2':''} gap-8`}>
                 <Comments productId={productId} />
                 {user && <Bids isOwner={user.user_id === productOwnerId} productId={productId} />}
             </div>
