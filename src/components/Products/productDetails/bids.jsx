@@ -6,10 +6,10 @@ import {
     Tr, useDisclosure, useToast
 } from '@chakra-ui/react';
 import moment from 'moment';
-import { SmileySad } from 'phosphor-react';
+import { SmileySad, Trash } from 'phosphor-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../../App';
-import { getProductBids, postBidOnProduct } from '../../../services/productService';
+import { deleteBidOfProduct, getProductBids, postBidOnProduct } from '../../../services/productService';
 import Button from '../../commons/atomic/button';
 import unknownErrorToast from '../../commons/atomic/unknownErrorToast';
 
@@ -60,9 +60,22 @@ function Bids({ productId, className, isOwner }) {
     // }
 
 
-    // const deleteBid = (id) => {
-    //     console.log('deleted')
-    // }
+    const handleBidDelete = (id) => {
+        deleteBidOfProduct(productId, id)
+        .then(_ => {
+            onBidDetailClose();
+            toast({
+                title: "Bid deleted",
+                duration: 3000,
+                isClosable: false,
+                status: "info"
+            })
+            setReload(!reload);
+        })
+        .catch(_ => {
+            console.log(_)
+        })
+    }
 
     const getFullName = ({ firstname, lastname }) => {
         return `${firstname} ${lastname}`;
@@ -72,48 +85,60 @@ function Bids({ productId, className, isOwner }) {
         <div className={className}>
             <Heading size={"lg"} className='mb-6'>Placed Bids</Heading>
             {bids.length > 0 ?
-                    <Table>
-                        <Thead>
-                            <Tr>
-                                <Th>Posted By</Th>
-                                <Th>Bid Price</Th>
-                                <Th></Th>
+                <Table>
+                    <Thead>
+                        <Tr>
+                            <Th>Posted By</Th>
+                            <Th>Bid Price</Th>
+                            <Th></Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {bids.map((bid) => (
+                            <Tr key={bid.id}>
+                                <Td>{bid.customer.firstname + ' ' + bid.customer.lastname}</Td>
+                                <Td>Rs. {bid.price}</Td>
+                                <Td isNumeric><Button onClick={() => {
+                                    setOpenedBid(bid)
+                                    onBidDetailOpen();
+                                }}>View Details</Button></Td>
                             </Tr>
-                        </Thead>
-                        <Tbody>
-                            {bids.map((bid) => (
-                                <Tr key={bid.id}>
-                                    <Td>{bid.customer.firstname + ' ' + bid.customer.lastname}</Td>
-                                    <Td>Rs. {bid.price}</Td>
-                                    <Td isNumeric><Button onClick={() => {
-                                        setOpenedBid(bid)
-                                        onBidDetailOpen();
-                                    }}>View Details</Button></Td>
-                                </Tr>
-                            ))}
-                        </Tbody>
-                    </Table>
-                    :
+                        ))}
+                    </Tbody>
+                </Table>
+                :
                 <NoBids />
             }
             {/* Modal for viewing bid details */}
-            {Object.keys(openedBid).length > 0 && <Modal size={"xl"} isOpen={isBidDetailOpen} onClose={onBidDetailClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader fontSize={"2xl"} fontWeight={"bold"}>Details</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <Heading marginY={"2"} fontSize={"xl"}>By {getFullName(openedBid.customer)}</Heading>
-                        <Text>Price: {openedBid.price}</Text>
-                        <Text>Placed on {moment(openedBid.date).format("ddd, MMMM YYYY")}</Text>
-                        <Heading marginY={"3"} fontSize={"xl"}>Description</Heading>
-                        <Text>{openedBid.description}</Text>
-                    </ModalBody>
-                    {<ModalFooter>
-                        <Button className={"ml-3"} filled>Approve</Button>
-                    </ModalFooter>}
-                </ModalContent>
-            </Modal>}
+            {Object.keys(openedBid).length > 0 &&
+                <Modal size={"xl"} isOpen={isBidDetailOpen} onClose={onBidDetailClose}>
+                    <ModalOverlay />
+                    <ModalContent>
+                        <ModalHeader fontSize={"2xl"} fontWeight={"bold"}>Details</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <Heading marginY={"2"} fontSize={"xl"}>By {getFullName(openedBid.customer)}</Heading>
+                            <Text>Price: {openedBid.price}</Text>
+                            <Text>Placed on {moment(openedBid.date).format("ddd, MMMM YYYY")}</Text>
+                            <Heading marginY={"3"} fontSize={"xl"}>Description</Heading>
+                            <Text>{openedBid.description}</Text>
+                        </ModalBody>
+                        {<ModalFooter>
+                            {/* Only if current bid belongs to current user */}
+                            <Button
+                                display={
+                                    Object.keys(openedBid).length > 0 && openedBid.customer.id === user.user_id ? "inherit" : "none"
+                                }
+                                onClick={() => {handleBidDelete(openedBid.id)}}
+                                danger
+                                rightIcon={<Trash />}>
+                                Delete
+                            </Button>
+                            {/* Only if the product belongs to current user */}
+                            <Button display={isOwner ? "inherit" : "none"} className={"ml-3"} filled>Approve</Button>
+                        </ModalFooter>}
+                    </ModalContent>
+                </Modal>}
 
             {/* Component for adding new bid */}
             {!isOwner && <ProductBidForm

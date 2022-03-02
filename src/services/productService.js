@@ -55,6 +55,6 @@ export async function postBidOnProduct(id, bid) {
     return http.post(getBidOnProductUrl(id), bid);
 }
 
-export async function deleteBidOfProduct(productId, commentId){
-    // return http.delete(getCommentOnProductUrl(productId) + commentId);
+export async function deleteBidOfProduct(productId, bidId){
+    return http.delete(getBidOnProductUrl(productId) + bidId);
 }
