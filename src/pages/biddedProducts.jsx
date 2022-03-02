@@ -7,7 +7,6 @@ import { productsList } from '../components/Products';
 import ProductsListing from '../components/Products/productsListing';
 
 function BiddedProducts() {
-
     const user = useContext(UserContext)
 
     return (

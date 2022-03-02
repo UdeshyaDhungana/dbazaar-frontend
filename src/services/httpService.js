@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getAccessTokenLocal, getRefreshTokenLocal, refreshJwtApi } from "./userService";
 
 const baseUrl = process.env.REACT_APP_HOST;
 
@@ -15,33 +14,31 @@ axios.interceptors.request.use(
     Promise.reject(error)
 });
 
-axios.interceptors.response.use((response) => {
-  return response
-}, function (error) {
-  const originalRequest = error.config;
+// axios.interceptors.response.use((response) => {
+//   return response
+// }, function (error) {
+//   const originalRequest = error.config;
 
-  if (error.response.status === 401 && originalRequest.url === refreshJwtApi) {
-      window.location.href = "/";
-      return Promise.reject(error);
-  }
+//   if (error.response.status === 401 && originalRequest.url === refreshJwtApi) {
+//       window.location.href = "/";
+//       return Promise.reject(error);
+//   }
 
-  if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      const refreshToken = getRefreshTokenLocal()
-      refreshToken()
-          .then(res => {
-              if (res.status === 201) {
-                  
-                  axios.defaults.headers.common['Authorization'] = 'JWT ' + getAccessTokenLocal()
-                  return axios(originalRequest);
-              }
-          })
-  }
-  return Promise.reject(error);
-});
+//   if (error.response.status === 401 && !originalRequest._retry) {
+//       originalRequest._retry = true;
+//       refreshToken()
+//           .then(res => {
+//               if (res.status === 201) {
+//                   axios.defaults.headers.common['Authorization'] = 'JWT ' + getAccessTokenLocal()
+//                   return axios(originalRequest);
+//               }
+//           })
+//   }
+//   return Promise.reject(error);
+// });
 
 function setJwt(jwt) {
-  axios.defaults.headers.common["Authorization"] = `JWT ${jwt}`;
+  axios.defaults.headers["Authorization"] = `JWT ${jwt}`;
 }
 
 const http = {

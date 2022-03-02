@@ -19,28 +19,28 @@ function App() {
 
   return (
     <div className="App">
-      <UserContext.Provider value={user}>
-        <BrowserRouter>
-          <TopNavBar setUser={setUser} />
-          <div className="md:px-8 px-2 mt-7 mb-10">
-            <Routes>
-              <Route path="about-us" exact element={<AboutUs />} />
-              <Route path="privacy-policy" exact element={<PrivacyPolicy />} />
+        <UserContext.Provider value={user}>
+          <BrowserRouter>
+            <TopNavBar setUser={setUser} />
+            <div className="md:px-8 px-2 mt-7 mb-10">
+              <Routes>
+                <Route path="about-us" exact element={<AboutUs />} />
+                <Route path="privacy-policy" exact element={<PrivacyPolicy />} />
 
-              <Route path="products" element={<Outlet />} >
-                <Route path=":id" element={<ProductDetail />} />
-                <Route path="mine" element={<MyProducts />} />
-                <Route path="my-bids" element={<BiddedProducts />} />
-                <Route path="add" element={<AddProduct />} />
-              </Route>
+                <Route path="products" element={<Outlet />} >
+                  <Route path=":id" element={<ProductDetail />} />
+                  <Route path="mine" element={<MyProducts />} />
+                  <Route path="my-bids" element={<BiddedProducts />} />
+                  <Route path="add" element={<AddProduct />} />
+                </Route>
 
-              <Route path="/" element={<Home />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
-          <BottomNavBar />
-        </BrowserRouter>
-      </UserContext.Provider>
+                <Route path="/" element={<Home />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
+            <BottomNavBar />
+          </BrowserRouter>
+        </UserContext.Provider>
     </div>
   );
 }

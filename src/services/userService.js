@@ -2,8 +2,9 @@ import jwtDecode from 'jwt-decode';
 import http, { baseUrl } from './httpService';
 
 const usersApi = baseUrl + '/auth/users/';
-const createJwtApi = baseUrl + '/auth/jwt/create'
-export const refreshJwtApi = baseUrl + '/auth/jwt/refresh'
+const createJwtApi = baseUrl + '/auth/jwt/create';
+const refreshJwtApi = baseUrl + '/auth/jwt/refresh';
+const myDetailsApi = baseUrl + '/auth/users/me';
 
 export async function register(user){
     return http.post(usersApi, user);
@@ -19,6 +20,14 @@ export async function refreshToken(){
     })
 }
 
+export async function getMyDetails() {
+    return http.get(myDetailsApi, {
+        headers: {
+            'Authorization': `JWT ${getAccessTokenLocal()}`
+        }
+    });
+}
+
 /* Synchronous */
 
 export function saveAccessToken(accessToken) {
@@ -26,7 +35,7 @@ export function saveAccessToken(accessToken) {
 }
 
 export function saveRefreshToken(refreshToken) {
-    refreshToken && localStorage.setItem('accessToken', refreshToken);
+    refreshToken && localStorage.setItem('refreshToken', refreshToken);
 }
 
 export function saveToken({ access, refresh }){
@@ -40,6 +49,11 @@ export function removeAccessToken(){
 
 export function removeRefreshToken(){
     localStorage.removeItem('refreshToken');
+}
+
+export function removeTokens() {
+    removeAccessToken();
+    removeRefreshToken();
 }
 
 export function getAccessTokenLocal(){
