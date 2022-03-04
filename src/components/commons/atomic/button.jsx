@@ -8,10 +8,12 @@ function Button({
     children,
     shadow,
     danger,
+    className,
     filled,
     ...props }) {
     return (
         <ChakraButton
+            className={className}
             colorScheme={danger? "red": "blue"}
             variant={danger? 'solid': filled? 'solid' : 'outline'}
             boxShadow={shadow ? 'md' : 'inherit'}

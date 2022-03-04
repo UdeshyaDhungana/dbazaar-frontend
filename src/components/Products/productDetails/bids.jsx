@@ -3,6 +3,7 @@ import {
     ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField,
     NumberInputStepper, Table, Tbody,
     Td, Text, Textarea, Th, Thead,
+    Tooltip,
     Tr, useDisclosure, useToast
 } from '@chakra-ui/react';
 import moment from 'moment';
@@ -13,7 +14,7 @@ import { deleteBidOfProduct, getProductBids, postBidOnProduct } from '../../../s
 import Button from '../../commons/atomic/button';
 import unknownErrorToast from '../../commons/atomic/unknownErrorToast';
 
-function Bids({ productId, className, isOwner }) {
+function Bids({ productId, className, isOwner, visible }) {
     const user = useContext(UserContext);
 
     const [bids, setBids] = useState([]);
@@ -143,12 +144,13 @@ function Bids({ productId, className, isOwner }) {
             {/* Component for adding new bid */}
             {!isOwner && <ProductBidForm
                 user={user}
+                visible={visible}
                 handlePlaceBid={handleBidSubmit} />}
         </div>
     );
 }
 
-const ProductBidForm = ({ handlePlaceBid }) => {
+const ProductBidForm = ({ handlePlaceBid, visible }) => {
     const [bidPrice, setBidPrice] = useState(0);
     const [bidPriceError, setBidPriceError] = useState("");
     const [description, setDescription] = useState("");
@@ -180,7 +182,15 @@ const ProductBidForm = ({ handlePlaceBid }) => {
 
     return (
         <>
-            <Button onClick={onBidFormOpen} filled display={"inherit"} className="mt-3">Add Bid</Button>
+            <Tooltip display={visible? "none": "inherit"} label={'This product is unlisted'}>
+                <Button
+                    disabled={!visible}
+                    onClick={onBidFormOpen}
+                    filled
+                    className="mt-3">
+                    Add Bid
+                </Button>
+            </Tooltip>
             <Modal isOpen={isBidFormOpen} onClose={onBidFormClose}>
                 <ModalOverlay />
                 <ModalContent>

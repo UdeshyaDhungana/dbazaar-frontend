@@ -12,6 +12,10 @@ import PrivacyPolicy from "./pages/privacyPolicy";
 import ProductDetail from "./pages/productDetail";
 import { getCurrentUser } from "./services/userService";
 
+const mandatory = {
+  minHeight: '65vh'
+}
+
 const UserContext = createContext(null);
 
 function App() {
@@ -22,11 +26,10 @@ function App() {
         <UserContext.Provider value={user}>
           <BrowserRouter>
             <TopNavBar setUser={setUser} />
-            <div className="md:px-8 px-2 mt-7 mb-10">
+            <div style={mandatory} className="md:px-8 px-2 mt-7 mb-10">
               <Routes>
                 <Route path="about-us" exact element={<AboutUs />} />
                 <Route path="privacy-policy" exact element={<PrivacyPolicy />} />
-
                 <Route path="products" element={<Outlet />} >
                   <Route path=":id" element={<ProductDetail />} />
                   <Route path="mine" element={<MyProducts />} />

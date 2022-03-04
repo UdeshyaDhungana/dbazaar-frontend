@@ -10,13 +10,14 @@ import { getCategories } from '../../../services/categoryService'
 import unknownErrorToast from './unknownErrorToast'
 
 // Pass the name of 
-function CategorySelectInput({ className, setValue, insideForm }) {
+function CategorySelectInput({ className, value, setValue, insideForm }) {
     const [categories, setCategories] = useState([])
     const toast = useToast();
 
     useEffect(() => {
         getCategories().then(({ data }) => {
             setCategories(data)
+            setCategories([{ id: "0", title: "---"}, ...data])
         }).catch(_ => {
             unknownErrorToast(toast);
         })
@@ -28,6 +29,7 @@ function CategorySelectInput({ className, setValue, insideForm }) {
                 onChange={({ target: { value } }) => {
                     setValue(value);
                 }}
+                value={value}
             >
                 {categories.map(({ id, title }) => (
                     <option key={id} value={id}>{title}</option>

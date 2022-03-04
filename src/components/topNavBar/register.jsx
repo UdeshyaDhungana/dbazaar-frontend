@@ -111,6 +111,9 @@ function Register() {
                     unknownErrorToast(toast);
                 }
             })
+            .finally(_ => {
+                clearForm();
+            })
         }
     }
 

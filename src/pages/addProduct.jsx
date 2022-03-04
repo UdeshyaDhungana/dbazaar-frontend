@@ -18,7 +18,7 @@ function ProductAddForm() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [unit_price, setUnit_price] = useState(1);
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState(0);
 
     const [submitted, setSubmitted] = useState(false);
     const [redirectId, setRedirectId] = useState();
@@ -86,6 +86,7 @@ function ProductAddForm() {
                     </FormControl>
 
                     <CategorySelectInput
+                        value={category}
                         setValue={setCategory}
                         className={'mb-5'}
                         insideForm />
@@ -97,7 +98,7 @@ function ProductAddForm() {
                         </InputGroup>
                     </FormControl>
 
-                    <Button type="submit">
+                    <Button filled type="submit">
                         Add
                     </Button>
                 </form>

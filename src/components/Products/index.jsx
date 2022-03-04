@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Filters from './filters';
 import ProductsListing from './productsListing';
 import { getProducts } from '../../services/productService';
 import { useToast } from '@chakra-ui/react';
+import { SmileySad } from 'phosphor-react';
 
 export const productsList = [
     {
@@ -174,7 +174,7 @@ function Products() {
 
     useEffect(() => {
         getProducts()
-            .then(({ data: {results} }) => {
+            .then(({ data: { results } }) => {
                 setProducts(results);
             }).catch(_ => {
                 toast({
@@ -190,9 +190,17 @@ function Products() {
     return (
         <div>
             {/* <Filters applyFilter={applyFilter} /> */}
-            <ProductsListing
+            {products.length > 0 ? <ProductsListing
                 products={products}
             />
+                :
+                <div className='grid justify-center'>
+                    <div className='justify-self-center'>
+                        <SmileySad display={'block'} className='' size={64} />
+                    </div>
+                    <div className='align-center' >No products found!</div>
+                </div>
+            }
         </div>
         // </div>
     );

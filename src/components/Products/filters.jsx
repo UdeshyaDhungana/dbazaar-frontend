@@ -11,7 +11,7 @@ import CategorySelectInput from '../commons/atomic/categorySelectInput'
 
 
 function FiltersForm({ applyFilter }) {
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState(0);
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(0);
 
@@ -27,6 +27,7 @@ function FiltersForm({ applyFilter }) {
     return (
         <form className='md:w-1/2' onSubmit={handleSubmit}>
             <CategorySelectInput
+                value={category}
                 name={'category'}
                 className={'my-4'}
                 setValue={setCategory} />

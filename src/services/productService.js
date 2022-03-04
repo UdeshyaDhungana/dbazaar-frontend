@@ -32,6 +32,10 @@ export async function addProduct(product) {
     });
 }
 
+export async function deleteProduct(id) {
+    return http.delete(productUrl + `${id}`);
+}
+
 /* Comments */
 export async function getProductComments(id) {
     return http.get(getCommentOnProductUrl(id));
