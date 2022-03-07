@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import { UserContext } from '../App';
 import { Navigate } from 'react-router-dom';
 
-import { productsList } from '../components/Products'
 import { useEffect } from 'react';
 
 import ProductsListing from '../components/Products/productsListing';
@@ -13,7 +12,7 @@ function MyProductListing() {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        setProducts(productsList);
+        setProducts([]);
     }, [])
 
     return (
@@ -23,12 +22,15 @@ function MyProductListing() {
 
 function MyProducts() {
     const user = useContext(UserContext)
-    return (user ?
-        <>
-        <Heading size={"lg"}>My Products</Heading>
-        <MyProductListing />
-        </>
-        : <Navigate to="/" />)
+    return (
+        // user ?
+        // <>
+        // <Heading size={"lg"}>My Products</Heading>
+        // <MyProductListing />
+        // </>
+        // :
+        <Navigate to="/" />
+    )
 }
 
 export default MyProducts;
