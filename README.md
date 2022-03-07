@@ -24,3 +24,10 @@ Take a deep breath!
 - Rating star :  ![#FB8200](https://via.placeholder.com/15/FB8200/000000?text=+)  #FB8200
 - Status dot on profile pic(Online) :  ![#2FA84F](https://via.placeholder.com/15/2FA84F/000000?text=+)  #2FA84F
 - Status dot on profile pic(Offline) :  ![#EDEDF0](https://via.placeholder.com/15/EDEDF0/000000?text=+)  #EDEDF0
+
+
+## Instructions
+
+- Setup the backend (see `dbazaar-backend`)
+- `npm install`
+- `npm start`
