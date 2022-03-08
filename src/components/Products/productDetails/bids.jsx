@@ -63,6 +63,12 @@ function Bids({ productId, className, isOwner, visible }) {
         console.log(openedBidId)
         approveBidOfProduct(productId, openedBidId)
         .then(({ data }) => {
+            toast({
+                title: "Success",
+                isClosable: false,
+                status: 'success',
+                duration: '4000',
+            })
             /* Redirect to /my-transfers */
         })
         .catch(err => {
