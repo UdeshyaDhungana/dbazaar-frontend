@@ -3,16 +3,17 @@ import {
     ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField,
     NumberInputStepper, Table, Tbody,
     Td, Text, Textarea, Th, Thead,
-    Tooltip,
     Tr, useDisclosure, useToast
 } from '@chakra-ui/react';
 import moment from 'moment';
 import { SmileySad, Trash } from 'phosphor-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../../App';
-import { deleteBidOfProduct, getProductBids, postBidOnProduct } from '../../../services/productService';
+import { approveBidOfProduct, deleteBidOfProduct, getProductBids, postBidOnProduct } from '../../../services/productService';
 import Button from '../../commons/atomic/button';
 import unknownErrorToast from '../../commons/atomic/unknownErrorToast';
+import { useNavigate } from 'react-router-dom';
+
 
 function Bids({ productId, className, isOwner, visible }) {
     const user = useContext(UserContext);
@@ -24,6 +25,7 @@ function Bids({ productId, className, isOwner, visible }) {
     const { onOpen: onBidDetailOpen, isOpen: isBidDetailOpen, onClose: onBidDetailClose } = useDisclosure();
 
     const toast = useToast();
+    const navigate = useNavigate();
 
     useEffect(() => {
         productId && getProductBids(productId)
@@ -56,26 +58,34 @@ function Bids({ productId, className, isOwner, visible }) {
             })
     }
 
-    // const handleBidApproval = () => {
-    //     console.log('approved')
-    // }
+    const handleBidApproval = (productId, openedBidId) => {
+        console.log(productId)
+        console.log(openedBidId)
+        approveBidOfProduct(productId, openedBidId)
+        .then(({ data }) => {
+            console.table(data)
+        })
+        .catch(err => {
+            unknownErrorToast(toast);
+        })
+    }
 
 
     const handleBidDelete = (id) => {
         deleteBidOfProduct(productId, id)
-        .then(_ => {
-            onBidDetailClose();
-            toast({
-                title: "Bid deleted",
-                duration: 3000,
-                isClosable: false,
-                status: "info"
+            .then(_ => {
+                onBidDetailClose();
+                toast({
+                    title: "Bid deleted",
+                    duration: 3000,
+                    isClosable: false,
+                    status: "info"
+                })
+                setReload(!reload);
             })
-            setReload(!reload);
-        })
-        .catch(_ => {
-            console.log(_)
-        })
+            .catch(_ => {
+                console.log(_)
+            })
     }
 
     const getFullName = ({ firstname, lastname }) => {
@@ -130,13 +140,17 @@ function Bids({ productId, className, isOwner, visible }) {
                                 display={
                                     Object.keys(openedBid).length > 0 && openedBid.customer.id === user.user_id ? "inherit" : "none"
                                 }
-                                onClick={() => {handleBidDelete(openedBid.id)}}
+                                onClick={() => { handleBidDelete(openedBid.id) }}
                                 danger
                                 rightIcon={<Trash />}>
                                 Delete
                             </Button>
                             {/* Only if the product belongs to current user */}
-                            <Button display={isOwner ? "inherit" : "none"} className={"ml-3"} filled>Approve</Button>
+                            {isOwner && <Button
+                                onClick={() => { handleBidApproval(productId, openedBid.id) }}
+                                display={isOwner ? "inherit" : "none"} className={"ml-3"} filled>
+                                Approve
+                            </Button>}
                         </ModalFooter>}
                     </ModalContent>
                 </Modal>}
@@ -182,15 +196,13 @@ const ProductBidForm = ({ handlePlaceBid, visible }) => {
 
     return (
         <>
-            <Tooltip display={visible? "none": "inherit"} label={'This product is unlisted'}>
-                <Button
-                    disabled={!visible}
-                    onClick={onBidFormOpen}
-                    filled
-                    className="mt-3">
-                    Add Bid
-                </Button>
-            </Tooltip>
+            <Button
+                disabled={!visible}
+                onClick={onBidFormOpen}
+                filled
+                className="mt-3">
+                Add Bid
+            </Button>
             <Modal isOpen={isBidFormOpen} onClose={onBidFormClose}>
                 <ModalOverlay />
                 <ModalContent>

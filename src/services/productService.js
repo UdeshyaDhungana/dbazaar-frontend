@@ -2,15 +2,19 @@ import http, { baseUrl } from "./httpService";
 
 const productUrl = baseUrl + '/store/products/'
 
-function getCommentOnProductUrl(id) {
-    return productUrl + `${id}/comments/`;
+function singleProductUrl(productId) {
+    return productUrl + productId
 }
 
-function getBidOnProductUrl(id) {
-    return productUrl + `${id}/bids/`;
+function getCommentOnProductUrl(id, commentId) {
+    return productUrl + `${id}/comments/${commentId?commentId+'/':''}`;
 }
 
-/* Synchronous */
+function getBidOnProductUrl(id, bidId) {
+    return productUrl + `${id}/bids/${bidId?bidId+'/':''}`;
+}
+
+/* ========== Synchronous ========== */
 export async function getProducts() {
     return http.get(productUrl);
 }
@@ -19,9 +23,9 @@ export function getImageUrl(source) {
     return baseUrl + source;
 }
 
-/* Asynchronous */
+/* ========== Asynchronous ========== */
 export async function getSingleProuct(id) {
-    return http.get(productUrl + `${id}`);
+    return http.get(singleProductUrl(id));
 }
 
 export async function addProduct(product) {
@@ -33,7 +37,7 @@ export async function addProduct(product) {
 }
 
 export async function deleteProduct(id) {
-    return http.delete(productUrl + `${id}`);
+    return http.delete(singleProductUrl(id));
 }
 
 /* Comments */
@@ -48,9 +52,10 @@ export async function postCommentOnProduct(id, description) {
 }
 
 export async function deleteCommentOfProduct(productId, commentId){
-    return http.delete(getCommentOnProductUrl(productId) + commentId);
+    return http.delete(getCommentOnProductUrl(productId, commentId));
 }
 
+/* Bids */
 export async function getProductBids(id) {
     return http.get(getBidOnProductUrl(id));
 }
@@ -60,5 +65,12 @@ export async function postBidOnProduct(id, bid) {
 }
 
 export async function deleteBidOfProduct(productId, bidId){
-    return http.delete(getBidOnProductUrl(productId) + bidId);
+    return http.delete(getBidOnProductUrl(productId, bidId));
+}
+
+export async function approveBidOfProduct(productId, bidId){
+    console.log(getBidOnProductUrl(productId, bidId))
+    return http.put(getBidOnProductUrl(productId, bidId), {
+        'approved': true,
+    })
 }

@@ -61,7 +61,7 @@ function ProductDetail() {
                 <ProductImage className="justify-self-center" title={label} imageUrl={imageUrl} />
                 <Box>
                     <Heading size={"lg"}>{label}</Heading>
-                    {(user.user_id === productOwnerId) &&
+                    {(user && user.user_id === productOwnerId) &&
                         <Button onClick={onOpen} className={'my-2'} danger>
                             Delete
                         </Button>}
