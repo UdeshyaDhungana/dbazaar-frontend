@@ -63,7 +63,7 @@ function Bids({ productId, className, isOwner, visible }) {
         console.log(openedBidId)
         approveBidOfProduct(productId, openedBidId)
         .then(({ data }) => {
-            console.table(data)
+            /* Redirect to /my-transfers */
         })
         .catch(err => {
             unknownErrorToast(toast);
