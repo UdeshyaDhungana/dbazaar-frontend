@@ -3,7 +3,11 @@ import http, { baseUrl } from "./httpService";
 const productUrl = baseUrl + '/store/products/'
 
 function singleProductUrl(productId) {
-    return productUrl + productId
+    return `${productUrl}${productId}/`
+}
+
+function productVisibilityUrl(productId){
+    return `${singleProductUrl(productId)}visibility/`
 }
 
 function getCommentOnProductUrl(id, commentId) {
@@ -69,8 +73,15 @@ export async function deleteBidOfProduct(productId, bidId){
 }
 
 export async function approveBidOfProduct(productId, bidId){
-    console.log(getBidOnProductUrl(productId, bidId))
     return http.put(getBidOnProductUrl(productId, bidId), {
         'approved': true,
+    })
+}
+
+export async function toggleVisibility(productId, visibility) {
+    return http.put(productVisibilityUrl(productId), {}, {
+        params: {
+            visible: visibility
+        }
     })
 }
