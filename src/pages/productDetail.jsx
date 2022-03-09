@@ -1,6 +1,4 @@
-import {
-    Box, Heading, Modal, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure, useToast
-} from '@chakra-ui/react';
+import { Badge, Box, Heading, Modal, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure, useToast } from '@chakra-ui/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { UserContext } from '../App';
@@ -60,7 +58,7 @@ function ProductDetail() {
             <div className="grid my-10 md:grid-cols-2">
                 <ProductImage className="justify-self-center" title={label} imageUrl={imageUrl} />
                 <Box>
-                    <Heading size={"lg"}>{label}</Heading>
+                    <Heading size={"lg"}>{label}  {!visible && <Badge>Unlisted</Badge>}</Heading>
                     {(user && user.user_id === productOwnerId) &&
                         <Button onClick={onOpen} className={'my-2'} danger>
                             Delete

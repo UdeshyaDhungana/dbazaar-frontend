@@ -8,11 +8,11 @@ import {
 import moment from 'moment';
 import { SmileySad, Trash } from 'phosphor-react';
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../../App';
 import { approveBidOfProduct, deleteBidOfProduct, getProductBids, postBidOnProduct } from '../../../services/productService';
 import Button from '../../commons/atomic/button';
 import unknownErrorToast from '../../commons/atomic/unknownErrorToast';
-import { useNavigate } from 'react-router-dom';
 
 
 function Bids({ productId, className, isOwner, visible }) {
@@ -62,18 +62,20 @@ function Bids({ productId, className, isOwner, visible }) {
         console.log(productId)
         console.log(openedBidId)
         approveBidOfProduct(productId, openedBidId)
-        .then(({ data }) => {
-            toast({
-                title: "Success",
-                isClosable: false,
-                status: 'success',
-                duration: '4000',
+            .then(({ data }) => {
+                toast({
+                    title: "Success",
+                    description: "Bid approved successfully",
+                    isClosable: false,
+                    status: 'success',
+                    duration: '4000',
+                })
+                /* Redirect to /my-transfers */
+                navigate('/products/my-transfers')
             })
-            /* Redirect to /my-transfers */
-        })
-        .catch(err => {
-            unknownErrorToast(toast);
-        })
+            .catch(_ => {
+                unknownErrorToast(toast);
+            })
     }
 
 

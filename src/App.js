@@ -10,6 +10,7 @@ import MyProducts from "./pages/myProducts";
 import NotFound from "./pages/notFound";
 import PrivacyPolicy from "./pages/privacyPolicy";
 import ProductDetail from "./pages/productDetail";
+import MyTransfers from "./pages/myTransfers";
 import { getCurrentUser } from "./services/userService";
 
 const mandatory = {
@@ -34,6 +35,7 @@ function App() {
                   <Route path=":id" element={<ProductDetail />} />
                   <Route path="mine" element={<MyProducts />} />
                   <Route path="my-bids" element={<BiddedProducts />} />
+                  <Route path="my-transfers" element={<MyTransfers />} />
                   <Route path="add" element={<AddProduct />} />
                 </Route>
 
