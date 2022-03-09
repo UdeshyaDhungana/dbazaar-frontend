@@ -17,6 +17,7 @@ function ProductDetail() {
     const toast = useToast();
     const navigate = useNavigate();
     const { isOpen, onClose, onOpen } = useDisclosure();
+    const [refresh, setRefresh] = useState(false);
 
     const [productId, setProductId] = useState(0);
     const [label, setLabel] = useState('');
@@ -58,6 +59,7 @@ function ProductDetail() {
         toggleVisibility(productId, !visible)
             .then(({ data: { visible } }) => {
                 setVisible(visible)
+                setRefresh(!refresh)
             }).catch(_ => {
                 console.log(_);
             })
@@ -94,7 +96,7 @@ function ProductDetail() {
             {/* {user && <OwnershipHistory />} */}
             <div className={`grid ${user ? 'md:grid-cols-2' : ''} gap-8`}>
                 <Comments productId={productId} />
-                {user && <Bids visible={visible} isOwner={user.user_id === productOwnerId} productId={productId} />}
+                {user && <Bids refresh={refresh} visible={visible} isOwner={user.user_id === productOwnerId} productId={productId} />}
             </div>
             <Modal size={"xs"} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />

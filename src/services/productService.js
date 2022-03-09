@@ -1,4 +1,5 @@
 import http, { baseUrl } from "./httpService";
+import { getAccessTokenLocal } from "./userService";
 
 const productUrl = baseUrl + '/store/products/'
 
@@ -61,7 +62,11 @@ export async function deleteCommentOfProduct(productId, commentId){
 
 /* Bids */
 export async function getProductBids(id) {
-    return http.get(getBidOnProductUrl(id));
+    return http.get(getBidOnProductUrl(id), {
+        headers: {
+            'Authorization': `JWT ${getAccessTokenLocal()}`
+        }
+    });
 }
 
 export async function postBidOnProduct(id, bid) {

@@ -15,7 +15,7 @@ import Button from '../../commons/atomic/button';
 import unknownErrorToast from '../../commons/atomic/unknownErrorToast';
 
 
-function Bids({ productId, className, isOwner, visible }) {
+function Bids({ productId, className, isOwner, visible, refresh }) {
     const user = useContext(UserContext);
 
     const [bids, setBids] = useState([]);
@@ -28,14 +28,14 @@ function Bids({ productId, className, isOwner, visible }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        productId && getProductBids(productId)
+        productId && user && getProductBids(productId)
             .then(({ data }) => {
                 setBids(data);
             })
             .catch(_ => {
                 unknownErrorToast(toast)
             })
-    }, [productId, toast, reload]);
+    }, [productId, toast, user, reload, refresh]);
 
     const handleBidSubmit = (bidPrice, description) => {
         const bid = {
