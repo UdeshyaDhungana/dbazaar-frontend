@@ -19,6 +19,7 @@ function ProductAddForm() {
     const [description, setDescription] = useState("");
     const [unit_price, setUnit_price] = useState(1);
     const [category, setCategory] = useState(0);
+    const [productHash, setProductHash] = useState('');
 
     const [submitted, setSubmitted] = useState(false);
     const [redirectId, setRedirectId] = useState();
@@ -35,6 +36,7 @@ function ProductAddForm() {
         formData.append('unit_price', unit_price);
         formData.append('collection', category);
         formData.append('photo', fileRef.current.files[0]);
+        formData.append('product_hash', productHash);
 
         // Post product
         addProduct(formData)
@@ -96,6 +98,17 @@ function ProductAddForm() {
                         <InputGroup>
                             <input ref={fileRef} type='file' accept={'image/*'} name={'product-image'} className='none' />
                         </InputGroup>
+                    </FormControl>
+
+                    <FormControl isRequired className='mb-5' >
+                        <FormLabel htmlFor="product-hash">Product Hash</FormLabel>
+                        <Input
+                            className='w-1/4'
+                            id="product-hash"
+                            value={productHash}
+                            maxLength={64}
+                            onChange={({ target: { value } }) => setProductHash(value)} />
+                        <FormHelperText>Upto 64 characters</FormHelperText>
                     </FormControl>
 
                     <Button filled type="submit">
