@@ -32,6 +32,7 @@ function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [walletAddress, setWalletAddress] = useState("");
+  const [publicKey, setPublicKey] = useState("");
 
   // Keep track of errors
   const [emailError, setEmailError] = useState([]);
@@ -39,6 +40,7 @@ function Register() {
   const [usernameError, setUsernameError] = useState([]);
   const [passwordError, setPasswordError] = useState([]);
   const [passwordConfirmError, setPasswordConfirmError] = useState([]);
+  const [publicKeyError, setPublicKeyError] = useState([]);
 
   const isUserNameValid = () => {
     var re = /^\w+$/;
@@ -66,16 +68,21 @@ function Register() {
       setWalletAddressError("Wallet Address can be upto 70 characters");
       errorPresent = true;
     } else setWalletAddressError([]);
+    if (publicKey.length > 600) {
+      setWalletAddressError("Wallet Address can be upto 600 characters");
+      errorPresent = true;
+    } else setWalletAddressError([]);
     return errorPresent;
   };
 
   const generateErrorsAfterResponse = (data) => {
-    console.log(data)
+    console.log(data);
     const mapping = {
       username: setUsernameError,
       password: setPasswordError,
       email: setEmailError,
       wallet_address: setWalletAddressError,
+      public_key: setPublicKeyError,
     };
     Object.keys(data).forEach((key) => {
       mapping[key](data[key]);
@@ -96,11 +103,13 @@ function Register() {
     setFirstName("");
     setLastName("");
     setWalletAddress("");
+    setPublicKey("");
     // clear errors
     setUsernameError([]);
     setPasswordError([]);
     setPasswordConfirmError([]);
     setWalletAddressError([]);
+    setPublicKeyError([]);
   };
 
   const handleSubmit = async (event) => {
@@ -113,6 +122,7 @@ function Register() {
         first_name: firstName,
         last_name: lastName,
         wallet_address: walletAddress,
+        public_key: publicKey,
       })
         .then((_) => {
           onClose();
@@ -150,7 +160,7 @@ function Register() {
       >
         <Text fontFamily="Inter">Register</Text>
       </Button>
-      <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
+      <Modal size={"4xl"} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={handleSubmit}>
@@ -222,6 +232,21 @@ function Register() {
                     id="wallet_address"
                   />
                   {walletAddressError.map((error) => (
+                    <FormHelperText color={"crimson"}>{error}</FormHelperText>
+                  ))}
+                </FormControl>
+              </div>
+              <div className="mb-4">
+                <FormControl isRequired>
+                  <FormLabel htmlFor="public-key">Public Key</FormLabel>
+                  <Input
+                    value={publicKey}
+                    onChange={({ target: { value } }) => {
+                      setPublicKey(value);
+                    }}
+                    id="public-key"
+                  />
+                  {publicKeyError.map((error) => (
                     <FormHelperText color={"crimson"}>{error}</FormHelperText>
                   ))}
                 </FormControl>

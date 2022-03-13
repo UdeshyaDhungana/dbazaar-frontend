@@ -5,6 +5,7 @@ const usersApi = baseUrl + '/auth/users/';
 const createJwtApi = baseUrl + '/auth/jwt/create';
 const refreshJwtApi = baseUrl + '/auth/jwt/refresh';
 const myDetailsApi = baseUrl + '/auth/users/me';
+const getTokenApi = baseUrl + '/store/customers/get_token';
 
 export async function register(user){
     return http.post(usersApi, user);
@@ -26,6 +27,10 @@ export async function getMyDetails() {
             'Authorization': `JWT ${getAccessTokenLocal()}`
         }
     });
+}
+
+export async function getVerificationToken() {
+    return http.get(getTokenApi)
 }
 
 /* Synchronous */

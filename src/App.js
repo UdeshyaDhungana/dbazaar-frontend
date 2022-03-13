@@ -11,6 +11,7 @@ import NotFound from "./pages/notFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ProductDetail from "./pages/productDetail";
 import MyTransfers from "./pages/myTransfers";
+import Profile from './pages/profile'
 import { getCurrentUser } from "./services/userService";
 
 const mandatory = {
@@ -31,6 +32,7 @@ function App() {
               <Routes>
                 <Route path="about-us" exact element={<AboutUs />} />
                 <Route path="privacy-policy" exact element={<PrivacyPolicy />} />
+                <Route path="me" element={<Profile />} />
                 <Route path="products" element={<Outlet />} >
                   <Route path=":id" element={<ProductDetail />} />
                   <Route path="mine" element={<MyProducts />} />
