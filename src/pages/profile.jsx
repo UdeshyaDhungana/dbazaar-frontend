@@ -1,17 +1,13 @@
-import { Heading, useToast, Text } from "@chakra-ui/react";
+import {
+    FormControl,
+    FormLabel, Heading, Input, Text, useToast
+} from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { UserContext } from "../App";
+import Button from "../components/commons/atomic/button";
 import unknownErrorToast from "../components/commons/atomic/unknownErrorToast";
 import { getMyDetails, getVerificationToken } from "../services/userService";
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  Input,
-  FormHelperText,
-} from "@chakra-ui/react";
-import Button from "../components/commons/atomic/button";
 
 function Profile() {
   const user = useContext(UserContext);

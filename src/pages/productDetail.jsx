@@ -1,21 +1,20 @@
 import {
-  Badge,
-  Box,
-  FormLabel,
-  Heading,
-  Icon,
-  Modal,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Switch,
-  Text,
-  Tooltip,
-  useDisclosure,
-  useToast,
+    Badge,
+    Box,
+    FormLabel,
+    Heading,
+    Icon,
+    Modal,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Switch, Tooltip,
+    useDisclosure,
+    useToast
 } from "@chakra-ui/react";
+import { CircleWavyCheck, Warning } from "phosphor-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../App";
@@ -25,11 +24,10 @@ import Bids from "../components/Products/productDetails/bids";
 import Comments from "../components/Products/productDetails/comments";
 import ProductImage from "../components/Products/productDetails/productImage";
 import {
-  deleteProduct,
-  getSingleProuct,
-  toggleVisibility,
+    deleteProduct,
+    getSingleProuct,
+    toggleVisibility
 } from "../services/productService";
-import { Warning, CircleWavyCheck } from "phosphor-react";
 
 function ProductDetail() {
   const user = useContext(UserContext);
