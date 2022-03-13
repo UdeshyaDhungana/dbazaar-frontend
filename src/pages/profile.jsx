@@ -7,7 +7,7 @@ import { Navigate } from "react-router-dom";
 import { UserContext } from "../App";
 import Button from "../components/commons/atomic/button";
 import unknownErrorToast from "../components/commons/atomic/unknownErrorToast";
-import { getMyDetails, getVerificationToken } from "../services/userService";
+import { getMyDetails, getVerificationToken, verifyToken } from "../services/userService";
 
 function Profile() {
   const user = useContext(UserContext);
@@ -21,6 +21,7 @@ function Profile() {
   const [verified, setVerified] = useState(false);
   const [token, setToken] = useState("");
   const [signedToken, setSignedToken] = useState("");
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     getMyDetails()
@@ -48,7 +49,7 @@ function Profile() {
       .catch((_) => {
         unknownErrorToast(toast);
       });
-  }, [toast]);
+  }, [toast, reload]);
 
   const getFullName = ({ firstname, lastname }) => {
     return `${firstname} ${lastname}`;
@@ -65,7 +66,13 @@ function Profile() {
   };
 
   const onVerify = () => {
-      console.log(signedToken)
+      verifyToken(signedToken)
+      .then(_ => {
+        setReload(!reload);
+      })
+      .catch(_ => {
+        unknownErrorToast(toast);
+      })
   }
 
   return user ? (

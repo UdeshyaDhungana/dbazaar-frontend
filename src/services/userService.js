@@ -6,6 +6,7 @@ const createJwtApi = baseUrl + '/auth/jwt/create';
 const refreshJwtApi = baseUrl + '/auth/jwt/refresh';
 const myDetailsApi = baseUrl + '/auth/users/me';
 const getTokenApi = baseUrl + '/store/customers/get_token';
+const verifyTokenApi = baseUrl + '/store/customers/verify_token/'
 
 export async function register(user){
     return http.post(usersApi, user);
@@ -31,6 +32,12 @@ export async function getMyDetails() {
 
 export async function getVerificationToken() {
     return http.get(getTokenApi)
+}
+
+export async function verifyToken(token) {
+    return http.post(verifyTokenApi, {
+        signed_token: token,
+    })
 }
 
 /* Synchronous */
