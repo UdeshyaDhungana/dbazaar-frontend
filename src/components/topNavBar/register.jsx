@@ -33,6 +33,7 @@ function Register() {
   const [lastName, setLastName] = useState("");
   const [walletAddress, setWalletAddress] = useState("");
   const [publicKey, setPublicKey] = useState("");
+  const [publicKeyHash, setPublicKeyHash] = useState('');
 
   // Keep track of errors
   const [emailError, setEmailError] = useState([]);
@@ -41,6 +42,7 @@ function Register() {
   const [passwordError, setPasswordError] = useState([]);
   const [passwordConfirmError, setPasswordConfirmError] = useState([]);
   const [publicKeyError, setPublicKeyError] = useState([]);
+  const [publicKeyHashError, setPublicKeyHashError] = useState('');
 
   const isUserNameValid = () => {
     var re = /^\w+$/;
@@ -69,9 +71,13 @@ function Register() {
       errorPresent = true;
     } else setWalletAddressError([]);
     if (publicKey.length > 600) {
-      setWalletAddressError("Wallet Address can be upto 600 characters");
+      setWalletAddressError("Public key can be upto 600 characters");
       errorPresent = true;
     } else setWalletAddressError([]);
+    if (publicKeyHash.length > 50) {
+      setPublicKeyHashError('Publick key hash can be upto 50 characters')
+      errorPresent = true;
+    } else setPublicKeyHashError([]);
     return errorPresent;
   };
 
@@ -83,6 +89,7 @@ function Register() {
       email: setEmailError,
       wallet_address: setWalletAddressError,
       public_key: setPublicKeyError,
+      public_key_hash: setPublicKeyHashError,
     };
     Object.keys(data).forEach((key) => {
       mapping[key](data[key]);
@@ -104,11 +111,13 @@ function Register() {
     setLastName("");
     setWalletAddress("");
     setPublicKey("");
+    setPublicKeyHash("");
     // clear errors
     setUsernameError([]);
     setPasswordError([]);
     setPasswordConfirmError([]);
     setWalletAddressError([]);
+    setPublicKeyError([]);
     setPublicKeyError([]);
   };
 
@@ -123,6 +132,7 @@ function Register() {
         last_name: lastName,
         wallet_address: walletAddress,
         public_key: publicKey,
+        public_key_hash: publicKeyHash,
       })
         .then((_) => {
           onClose();
@@ -247,6 +257,21 @@ function Register() {
                     id="public-key"
                   />
                   {publicKeyError.map((error) => (
+                    <FormHelperText color={"crimson"}>{error}</FormHelperText>
+                  ))}
+                </FormControl>
+              </div>
+              <div className="mb-4">
+                <FormControl isRequired>
+                  <FormLabel htmlFor="public-key-hash">Public Key Hash</FormLabel>
+                  <Input
+                    value={publicKeyHash}
+                    onChange={({ target: { value } }) => {
+                      setPublicKeyHash(value);
+                    }}
+                    id="public-key-hash"
+                  />
+                  {publicKeyHashError.map((error) => (
                     <FormHelperText color={"crimson"}>{error}</FormHelperText>
                   ))}
                 </FormControl>
