@@ -59,7 +59,7 @@ function ProductDetail() {
           setDescription(description);
           setPostedBy(`${owner.firstname} ${owner.lastname}`);
           setImageUrl(image);
-          setProductOwnerId(owner.id);
+          setProductOwnerId(owner.user);
           setUserVerification(owner.verified)
           setVisible(visible);
         }

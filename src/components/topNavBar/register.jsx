@@ -42,7 +42,7 @@ function Register() {
   const [passwordError, setPasswordError] = useState([]);
   const [passwordConfirmError, setPasswordConfirmError] = useState([]);
   const [publicKeyError, setPublicKeyError] = useState([]);
-  const [publicKeyHashError, setPublicKeyHashError] = useState('');
+  const [publicKeyHashError, setPublicKeyHashError] = useState([]);
 
   const isUserNameValid = () => {
     var re = /^\w+$/;
